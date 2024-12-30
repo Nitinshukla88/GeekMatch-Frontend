@@ -9,6 +9,7 @@ const Login = () => {
 
   const [emailId, setEmailId] = useState("nitin@gmail.com");
   const [password, setPassword] = useState("Nitin@1234");
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ const Login = () => {
       dispatch(addUser(res.data));
       navigate("/feed");
     }catch(err){
+      setError(err?.response?.data);
       console.error(err);
     }
   }
@@ -52,6 +54,7 @@ const Login = () => {
               className="input input-bordered w-full max-w-xs text-white"
             />
           </label>
+          <p className="text-red-700 font-semibold">{error}</p>
           <div className="card-actions justify-center mt-3">
             <button className="btn btn-secondary" onClick={handleLogin}>Login</button>
           </div>
