@@ -13,19 +13,27 @@ const EditProfile = ({ userInfo }) => {
   const [about, setAbout] = useState(userInfo?.about);
   const [photo, setPhoto] = useState(userInfo?.photo || "");
   const [error, setError] = useState("");
-  
+  const [isProfileChanged, setIsProfileChanged] = useState(false);
 
   const dispatch = useDispatch();
 
-  const handleSave = async() => {
+  const handleSave = async () => {
+    setIsProfileChanged(true);
     setError("");
     try {
-      const res = await axios.patch(BASE_URL + "/profile/edit" , { firstName, lastName, gender, age, about, photo }, {withCredentials : true});
+      const res = await axios.patch(
+        BASE_URL + "/profile/edit",
+        { firstName, lastName, gender, age, about, photo },
+        { withCredentials: true }
+      );
       dispatch(addUser(res?.data?.data));
-    }catch(err){
+      const timeout = setTimeout(() => {
+        setIsProfileChanged(false);
+      }, 3000);
+    } catch (err) {
       setError(err?.response?.data);
     }
-  }
+  };
 
   return (
     <div className="flex justify-center">
@@ -69,13 +77,15 @@ const EditProfile = ({ userInfo }) => {
                       Gender:
                     </span>
                   </div>
-                  <input
-                    type="text"
-                    placeholder="Type here"
+                  <select
+                    className="text-white bg-base-100 rounded-lg py-3 px-3"
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
-                    className="input input-bordered w-full max-w-xs text-white"
-                  />
+                  >
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others">Others</option>
+                  </select>
                 </label>
               </div>
               <div className="mx-4">
@@ -99,13 +109,12 @@ const EditProfile = ({ userInfo }) => {
                       About:
                     </span>
                   </div>
-                  <input
-                    type="text"
+                  <textarea
+                    className="textarea text-white text-base h-24"
                     placeholder="Type here"
                     value={about}
                     onChange={(e) => setAbout(e.target.value)}
-                    className="input input-bordered w-full max-w-xs text-white"
-                  />
+                  ></textarea>
                 </label>
                 <label className="form-control w-full max-w-xs">
                   <div className="label">
@@ -125,12 +134,21 @@ const EditProfile = ({ userInfo }) => {
             </div>
             <p className="text-red-600 font-semibold">{error}</p>
             <div className="card-actions justify-center mt-3">
-              <button className="btn btn-secondary" onClick={handleSave}>Save</button>
+              <button className="btn btn-secondary" onClick={handleSave}>
+                Save
+              </button>
             </div>
           </div>
         </div>
       </div>
       <UserCard user={{ firstName, lastName, gender, age, photo, about }} />
+      {isProfileChanged && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-success">
+            <span>Profile changed Successfully</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

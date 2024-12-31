@@ -27,7 +27,7 @@ const Navbar = () => {
         <Link to="/feed" className="btn btn-ghost text-xl">❤️GeekMatch</Link>
       </div>
       <div className="flex-none gap-2">
-        {user && <p className="font-semibold"> Welcome {user?.firstName}</p>}
+        {user && <p className="font-semibold"> Welcome, {user?.firstName}</p>}
         <div className="form-control"></div>
         {user && (
           <div className="dropdown dropdown-end mx-4">
