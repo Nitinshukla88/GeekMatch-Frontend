@@ -3,7 +3,6 @@ import React from "react";
 const UserCard = ({ user }) => {
 
   const { firstName, lastName, about, age, gender, photo } = user;
-  console.log(about);
 
   return (
     <div className="flex justify-center my-16">
@@ -16,7 +15,7 @@ const UserCard = ({ user }) => {
       </figure>
       <div className="card-body">
         <h2 className="card-title">{firstName + " " + lastName}</h2>
-        <h3>{age + " " + gender}</h3>
+        <h3>{age + ", " + gender}</h3>
         <p>{about}</p>
         <div className="card-actions justify-center">
           <button className="btn btn-primary mx-2">Ignore</button>
