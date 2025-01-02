@@ -46,7 +46,7 @@ const Requests = () => {
         const { _id, firstName, lastName, age, gender, about, skills, photo } =
           request?.fromUserId;
         return (
-          <div className="bg-base-300 mx-auto my-4 flex w-[45%] items-center justify-between" key={_id}>
+          <div className="bg-base-300 mx-auto my-4 flex w-4/5 items-center justify-between" key={_id}>
             <div className="mx-4 my-4">
               <img
                 src={photo}
@@ -54,14 +54,14 @@ const Requests = () => {
                 className="w-20 h-20 rounded-2xl"
               />
             </div>
-            <div className="text-left my-4">
+            <div className=" my-4">
               <h2 className="text-xl font-semibold">
                 {firstName + " " + lastName}
               </h2>
               <h2>{age + ", " + gender}</h2>
               <h2>{about}</h2>
             </div>
-            <div>
+            <div className="flex justify-end">
               <button className="btn btn-primary mx-2" onClick={()=> reviewRequest("rejected", request?._id)}>Reject</button>
               <button className="btn btn-secondary mx-2" onClick={() => reviewRequest("accepted", request?._id)}>Accept</button>
             </div>
