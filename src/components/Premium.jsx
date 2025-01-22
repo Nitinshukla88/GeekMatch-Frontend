@@ -1,6 +1,35 @@
+import axios from "axios";
 import React from "react";
+import { BASE_URL } from "../utils/constants";
 
 const Premium = () => {
+
+  const handleBuyPremium = async(type) => {
+    const order = await axios.post(BASE_URL + "/payment/create", {membershipType : type}, {withCredentials : true});
+
+    const {amount, orderId, notes, keyId} = order.data;
+
+    const options = {
+      key: keyId, 
+      amount: amount,
+      currency: 'INR',
+      name: 'GeekMatch',
+      description: 'Dating and Hangout platform for developers',
+      order_id: orderId, 
+      prefill: {
+        name: notes.firstName + " " + notes.lastName,
+        email: notes.emailId,
+        contact: '9999999999'
+      },
+      theme: {
+        color: '#F37254'
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  }
+
   return (
     <div className="flex justify-center items-center my-16">
       <div className="card bg-base-300 w-96 shadow-2xl m-4 py-10">
@@ -13,7 +42,7 @@ const Premium = () => {
             <li className="list-disc text-left">3 months validity</li>
           </ul>
           <div className="card-actions">
-            <button className="btn btn-primary">Buy Now</button>
+            <button className="btn btn-primary" onClick={()=> handleBuyPremium("silver")}>Buy Now</button>
           </div>
         </div>
       </div>
@@ -28,7 +57,7 @@ const Premium = () => {
             <li className="list-disc text-left">6 months validity</li>
           </ul>
           <div className="card-actions">
-            <button className="btn btn-secondary">Buy Now</button>
+            <button className="btn btn-secondary" onClick={()=>handleBuyPremium("gold")}>Buy Now</button>
           </div>
         </div>
       </div>
