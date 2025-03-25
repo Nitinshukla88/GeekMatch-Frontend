@@ -1,1 +1,1 @@
-export const BASE_URL = (location.hostname === "localhost" ? "https://geekmatch-backend.onrender.com" : "/api");
+export const BASE_URL = "https://geekmatch-backend.onrender.com"
