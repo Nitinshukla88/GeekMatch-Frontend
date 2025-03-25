@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
 import Body from "./components/Body";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
@@ -9,6 +9,7 @@ import Connections from "./components/Connections";
 import Requests from "./components/Requests";
 import Signup from "./components/Signup";
 import Premium from "./components/Premium";
+import Chat from "./components/Chat";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/requests" element={<Requests/>}></Route>
             <Route path="/sign-up" element={<Signup/>}></Route>
             <Route path="/premium" element={<Premium/>}></Route>
+            <Route path="/chat/:targetUserId" element={<Chat/>}></Route>
           </Route>
         </Routes>
       </BrowserRouter>
