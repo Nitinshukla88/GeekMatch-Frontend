@@ -47,7 +47,8 @@ const Connections = () => {
                         <h2>{about}</h2>
                     </div>
                     </div>
-                    <Link to={"/chat/"+ _id}><button className='btn btn-primary mx-5'>Chat</button></Link>
+                    <Link to={"/videoChat/"+_id}><button className='btn btn-secondary'>Video Chat</button></Link>
+                    <Link to={"/chat/"+ _id}><button className='btn btn-primary mr-5'>Chat</button></Link>
                 </div>
             )
         })}
