@@ -31,7 +31,7 @@ const Body = () => {
   return (
     <div>
         <Navbar/>
-        <Outlet/>
+        <Outlet className="min-h-screen"/>
         <Footer/>
     </div>
   )
