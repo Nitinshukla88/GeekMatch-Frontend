@@ -11,6 +11,7 @@ import Signup from "./components/Signup";
 import Premium from "./components/Premium";
 import Chat from "./components/Chat";
 import VideoChat from "./components/VideoChat";
+import LandingPage from "./components/LandingPage";
 
 function App() {
   return (
@@ -18,8 +19,8 @@ function App() {
       <Provider store={appStore}>
       <BrowserRouter basename="/">
         <Routes>
-          <Route path="/" element={<Body />}>
-            <Route path="/" element={<Feed/>}></Route>
+          <Route path="/" element={<LandingPage />}>
+            <Route path="/get-started" element={<Body/>}></Route>
             <Route path="/login" element={<Login/>}></Route> 
             <Route path="/profile" element={<Profile/>}></Route>
             <Route path="/feed" element={<Feed/>}></Route>
