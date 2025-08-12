@@ -20,7 +20,7 @@ const Hero = () => {
         
         {/* Tagline */}
         <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-10 sm:mb-12 text-gray-80 font-medium">
-          For developers from developers
+          For developers From developers
         </p>
         
         {/* Static Get Started Button */}
