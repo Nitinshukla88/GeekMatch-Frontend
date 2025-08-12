@@ -19,7 +19,7 @@ const Feed = () => {
       dispatch(addFeed(res?.data.data));
     }catch(err){
       if(err.message === "Request failed with status code 401"){
-        navigate("/login");
+        navigate("/app/login");
       }
       console.error(err.message);
     }

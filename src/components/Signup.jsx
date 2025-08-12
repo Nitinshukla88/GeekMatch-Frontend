@@ -18,7 +18,7 @@ const Signup = () => {
         try{
             const res = await axios.post(BASE_URL + "/signup", { firstName, lastName, emailId, password }, {withCredentials : true});
             dispatch(addUser(res?.data?.data));
-            navigate("/profile");
+            navigate("/app/profile");
         }catch(err){
             setError(err?.response?.data);
         }
@@ -91,7 +91,7 @@ const Signup = () => {
               Sign Up
             </button>
           </div>
-          <p className="text-center font-medium">Already a User:)? <Link to="/login"><span className="text-white hover:underline cursor-pointer">Login Now.</span></Link></p>
+          <p className="text-center font-medium">Already a User:)? <Link to="/app/login"><span className="text-white hover:underline cursor-pointer">Login Now.</span></Link></p>
         </div>
       </div>
     </div>

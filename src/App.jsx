@@ -17,22 +17,25 @@ function App() {
   return (
     <>
       <Provider store={appStore}>
-      <BrowserRouter basename="/">
-        <Routes>
-          <Route path="/" element={<LandingPage />}>
-            <Route path="/get-started" element={<Body/>}></Route>
-            <Route path="/login" element={<Login/>}></Route> 
-            <Route path="/profile" element={<Profile/>}></Route>
-            <Route path="/feed" element={<Feed/>}></Route>
-            <Route path="/connections" element={<Connections/>}></Route>
-            <Route path="/requests" element={<Requests/>}></Route>
-            <Route path="/sign-up" element={<Signup/>}></Route>
-            <Route path="/premium" element={<Premium/>}></Route>
-            <Route path="/chat/:targetUserId" element={<Chat/>}></Route>
-            <Route path="/videoChat/:targetUserId" element={<VideoChat/>}></Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
+        <BrowserRouter basename="/">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/app" element={<Body />}>
+              <Route path="/app/profile" element={<Profile />} />
+              <Route path="/app/login" element={<Login />} />
+              <Route path="/app/sign-up" element={<Signup />} />
+              <Route path="/app/feed" element={<Feed />} />
+              <Route path="/app/connections" element={<Connections />} />
+              <Route path="/app/requests" element={<Requests />} />
+              <Route path="/app/premium" element={<Premium />} />
+              <Route path="/app/chat/:targetUserId" element={<Chat />} />
+              <Route
+                path="/app/videoChat/:targetUserId"
+                element={<VideoChat />}
+              />
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </Provider>
     </>
   );

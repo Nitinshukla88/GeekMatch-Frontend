@@ -1,11 +1,11 @@
 import React from 'react';
 import Button from './Button';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const navigate = useNavigate();
   const handleGetStarted = () => {
-    // Connect to your MERN backend API here
-    console.log('Get Started clicked - connecting to backend...');
-    // Example: fetch('/api/auth/signup') or navigate to signup page
+    navigate('/app');
   };
 
   return (

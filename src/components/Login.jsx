@@ -20,7 +20,7 @@ const Login = () => {
         { withCredentials: true }
       );
       dispatch(addUser(res.data));
-      navigate("/feed");
+      navigate("/app/feed");
     } catch (err) {
       setError(err?.response?.data);
       console.error(err);
@@ -66,7 +66,7 @@ const Login = () => {
               Login
             </button>
           </div>
-          <p className="text-center font-medium">New to GeekMatch❤️? <Link to="/sign-up"><span className="text-white hover:underline cursor-pointer">Sign Up Now.</span></Link></p>
+          <p className="text-center font-medium">New to GeekMatch❤️? <Link to="/app/sign-up"><span className="text-white hover:underline cursor-pointer">Sign Up Now.</span></Link></p>
         </div>
       </div>
     </div>

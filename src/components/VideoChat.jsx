@@ -131,7 +131,7 @@ const VideoChat = () => {
         </button>
         <button
           className="btn btn-secondary"
-          onClick={(e) => navigate("/connections")}
+          onClick={(e) => navigate("/app/connections")}
         >
           Disconnect call
         </button>
