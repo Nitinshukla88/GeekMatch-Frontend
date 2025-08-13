@@ -61,47 +61,165 @@ const Login = () => {
     }
   };
 
+  const validateSignUpData = () => {
+  
+    if (!firstName && !lastName && !emailId && !password) {
+      throw new Error("Please enter details to proceed!");
+    } else if (
+      !validator.matches(firstName.trim(), /^[A-Za-z\s]+$/) ||
+      firstName.trim().length < 3 ||
+      firstName.trim().length > 50 ||
+      !validator.matches(lastName.trim(), /^[A-Za-z\s]+$/) ||
+      lastName.trim().length < 3 ||
+      lastName.trim().length > 50
+    ) {
+      throw new Error(
+        "Minimum 3 to maximum 50 alphabet only characters required in first name and Last name."
+      );
+    } else if (!validator.isEmail(emailId)) {
+      throw new Error("Invalid Email: Please enter a valid email.");
+    } else if (!validator.isStrongPassword(password)) {
+      throw new Error(
+        "Invalid password: Must contain 8+ characters with at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character."
+      );
+    }
+  };
+
+  const handleSignUp = async() => {
+        try{
+            setError("");
+            validateSignUpData();
+            const res = await axios.post(BASE_URL + "/signup", { firstName, lastName, emailId, password }, {withCredentials : true});
+            dispatch(addUser(res?.data?.data));
+            navigate("/app/profile");
+        }catch(error){
+            if (error.response) {
+                setError(error.response?.data || "Server error occurred");
+            } else if (error.request) {
+                setError("Network error. Please check your connection.");
+            } else if (error.message) {
+                setError(error.message);
+            } else {
+                setError("Signup failed. Please try again.");
+            }
+        }
+    }
+
   return (
-    <div className="flex justify-center items-center">
-      <div className="card bg-primary text-primary-content w-96 mt-24">
-        <div className="card-body">
-          <h2 className="card-title justify-center text-3xl">Login</h2>
-          <label className="form-control w-full max-w-xs">
-            <div className="label">
-              <span className="label-text text-black font-semibold">
-                Email ID:
+    <div className="items-center justify-evenly min-h-screen text-gray-700 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100 flex flex-wrap ">
+      
+      <div className="intro-container m-6 py-8 md:w-[500px]">
+        <div className="flex-1 pb-2 text-center md:text-left">
+          <Link
+            to="/app/feed"
+            className=" text-6xl normal-case font-bold bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent "
+          >
+            GeekMatch
+          </Link>
+        </div>
+        <h2 className="tag-line text-2xl font-medium text-gray-900 text-center md:text-left">
+          Where code 👨🏼‍💻 meets chemistry 💞— connect with developers who speak your language.
+        </h2>
+      </div>
+
+      <div className="card shadow-lg w-[400px] bg-white rounded-xl p-8 m-6">
+        <h1 className="text-2xl font-bold text-center mb-6">
+          {isLoginForm ? "Login to Your Account" : "Create an Account"}
+        </h1>
+        
+        <form
+          className="space-y-4 "
+          onSubmit={(e) => {
+            e.preventDefault();
+            isLoginForm ? handleLogin() : handleSignUp();
+          }}
+        >
+          {!isLoginForm && (
+            <>
+              <div className="form-control ">
+                <label className="label">
+                  <span className="label-text font-medium text-gray-500">
+                    First Name
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  className="input input-bordered bg-white"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="Enter your first name"
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text font-medium text-gray-500">
+                    Last Name
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  className="input bg-white input-bordered"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Enter your last name"
+                />
+              </div>
+            </>
+          )}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-medium text-gray-500">
+                Email Address
               </span>
-            </div>
+            </label>
             <input
-              type="text"
-              placeholder="Type here"
+              type="email"
+              className="input input-bordered bg-white"
               value={emailId}
               onChange={(e) => setEmailId(e.target.value)}
-              className="input input-bordered w-full max-w-xs text-white"
+              placeholder="Enter your email"
+              required
             />
-          </label>
-          <label className="form-control w-full max-w-xs">
-            <div className="label">
-              <span className="label-text text-black font-semibold">
-                Password:
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-medium text-gray-500">
+                Password
               </span>
-            </div>
+            </label>
             <input
               type="password"
-              placeholder="Type here"
+              className="input input-bordered bg-white"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input input-bordered w-full max-w-xs text-white"
+              placeholder="Enter your password"
+              required
             />
-          </label>
-          <p className="text-red-700 font-semibold">{error}</p>
-          <div className="card-actions justify-center mt-3">
-            <button className="btn btn-secondary" onClick={handleLogin}>
-              Login
-            </button>
           </div>
-          <p className="text-center font-medium">New to GeekMatch❤️? <Link to="/app/sign-up"><span className="text-white hover:underline cursor-pointer">Sign Up Now.</span></Link></p>
-        </div>
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          <button
+            type="submit"
+            className="btn btn-primary text-white w-full mt-4"
+          >
+            {isLoginForm ? "Login" : "Sign Up"}
+          </button>
+        </form>
+        <p className="text-sm text-center mt-4">
+          {isLoginForm ? "Don't have an account?" : "Already have an account?"}{" "}
+          <button
+            className="text-blue-600 hover:underline"
+            onClick={() => {
+              setError("")
+              setEmailId("")
+              setFirstName("")
+              setLastName("")
+              setPassword("")
+              setIsLoginForm(!isLoginForm)
+            }}
+          >
+            {isLoginForm ? "Sign Up" : "Login"}
+          </button>
+        </p>
       </div>
     </div>
   );

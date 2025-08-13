@@ -30,7 +30,7 @@ const Navbar = () => {
             to="/app/feed"
             className="btn btn-ghost text-4xl text-yellow-500"
           >
-            ❤️GeekMatch
+            💖GeekMatch
           </Link>
         </div>
         <div className="flex gap-2 items-center">
