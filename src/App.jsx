@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Body from "./components/Body";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
@@ -7,7 +7,6 @@ import appStore from "./utils/appStore";
 import Feed from "./components/Feed";
 import Connections from "./components/Connections";
 import Requests from "./components/Requests";
-import Signup from "./components/Signup";
 import Premium from "./components/Premium";
 import Chat from "./components/Chat";
 import VideoChat from "./components/VideoChat";
@@ -23,7 +22,6 @@ function App() {
             <Route path="/app" element={<Body />}>
               <Route path="/app/profile" element={<Profile />} />
               <Route path="/app/login" element={<Login />} />
-              <Route path="/app/sign-up" element={<Signup />} />
               <Route path="/app/feed" element={<Feed />} />
               <Route path="/app/connections" element={<Connections />} />
               <Route path="/app/requests" element={<Requests />} />

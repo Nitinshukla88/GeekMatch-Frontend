@@ -1,19 +1,43 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/appStoreSlices/userSlice";
 import { BASE_URL } from "../utils/constants";
 import { Link, useNavigate } from "react-router-dom";
+import validator from "validator";
 
 const Login = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [isLoginForm, setIsLoginForm] = useState(true);
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((store) => store?.user);
+
+  useEffect(()=> {
+    window.scrollTo(0, 0);
+    if(user != null) {
+      navigate("/app/feed");
+    }
+  }, [user]);
+
+  const validateLoginData = () => {
+    if (!validator.isEmail(emailId)) {
+      throw new Error("Invalid Email: Please enter a valid email.");
+    } else if (!validator.isStrongPassword(password)) {
+      throw new Error(
+        "Invalid password: Must contain 8+ characters with at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character."
+      );
+    }
+  }
 
   const handleLogin = async () => {
     try {
+      setError("");
+      validateLoginData();
       const res = await axios.post(
         BASE_URL + "/login",
         { emailId, password },
@@ -22,8 +46,18 @@ const Login = () => {
       dispatch(addUser(res.data));
       navigate("/app/feed");
     } catch (err) {
-      setError(err?.response?.data);
-      console.error(err);
+      setError(err?.response?.data || "Login Failed");
+      if (error.response) {
+      } else if (error.request) {
+        //axios error with no response (network issue)
+        setError("Network error. Please check your connection.");
+      } else if (error.message) {
+        //regular Error object (including validation errors)
+        setError(error.message);
+      } else {
+        //fallback for any other error
+        setError("Signup failed. Please try again.");
+      }
     }
   };
 
