@@ -112,18 +112,18 @@ const Login = () => {
         <div className="flex-1 pb-2 text-center md:text-left">
           <Link
             to="/app/feed"
-            className=" text-6xl normal-case font-bold bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent "
+            className=" text-7xl normal-case font-bold bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent "
           >
             GeekMatch
           </Link>
         </div>
-        <h2 className="tag-line text-2xl font-medium text-gray-900 text-center md:text-left">
+        <h2 className="tag-line text-2xl font-medium text-gray-800 text-center md:text-left">
           Where code 👨🏼‍💻 meets chemistry 💞— connect with developers who speak your language.
         </h2>
       </div>
 
-      <div className="card shadow-lg w-[400px] bg-white rounded-xl p-8 m-6">
-        <h1 className="text-2xl font-bold text-center mb-6">
+      <div className="card shadow-2xl w-[400px] rounded-xl p-8 m-6">
+        <h1 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent">
           {isLoginForm ? "Login to Your Account" : "Create an Account"}
         </h1>
         

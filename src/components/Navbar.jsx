@@ -26,11 +26,12 @@ const Navbar = () => {
     <>
       <div className="navbar bg-base-300 sticky top-0 z-50">
         <div className="flex-1">
+          <span className="text-4xl mx-1">💖</span>
           <Link
             to="/app/feed"
-            className="btn btn-ghost text-4xl text-yellow-500"
+            className="btn btn-ghost text-4xl bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent my-2 px-0 font-semibold"
           >
-            💖GeekMatch
+            GeekMatch
           </Link>
         </div>
         <div className="flex gap-2 items-center">
