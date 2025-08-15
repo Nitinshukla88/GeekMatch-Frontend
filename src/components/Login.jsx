@@ -199,7 +199,7 @@ const Login = () => {
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           <button
             type="submit"
-            className="btn btn-primary text-white w-full mt-4"
+            className="btn btn-primary text-white bg-rose-700 border-none w-full mt-4"
           >
             {isLoginForm ? "Login" : "Sign Up"}
           </button>
@@ -207,7 +207,7 @@ const Login = () => {
         <p className="text-sm text-center mt-4">
           {isLoginForm ? "Don't have an account?" : "Already have an account?"}{" "}
           <button
-            className="text-blue-600 hover:underline"
+            className="text-rose-600 hover:underline"
             onClick={() => {
               setError("")
               setEmailId("")

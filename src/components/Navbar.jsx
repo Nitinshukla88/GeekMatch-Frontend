@@ -63,7 +63,7 @@ const Navbar = () => {
                 className="menu menu-sm dropdown-content bg-base-300 text-yellow-500 rounded-box mt-3 w-52 p-2 shadow-lg"
               >
                 <li>
-                  <Link to="/" className="flex items-center gap-2">
+                  <Link to="/app/feed" className="flex items-center gap-2">
                     <span className="material-symbols-outlined">
                       dynamic_feed
                     </span>{" "}
@@ -71,21 +71,21 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/profile" className="flex items-center gap-2">
+                  <Link to="/app/profile" className="flex items-center gap-2">
                     <span className="material-symbols-outlined">person</span>{" "}
                     Profile
                   </Link>
                 </li>
 
                 <li>
-                  <Link to="/connections" className="flex items-center gap-2">
+                  <Link to="/app/connections" className="flex items-center gap-2">
                     {" "}
                     <span className="material-symbols-outlined">group</span>
                     Connections
                   </Link>
                 </li>
                 <li>
-                  <Link to="/requests" className="flex items-center gap-2">
+                  <Link to="/app/requests" className="flex items-center gap-2">
                     {" "}
                     <span className="material-symbols-outlined">
                       person_add
@@ -94,7 +94,7 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/premium" className="flex items-center gap-2">
+                  <Link to="/app/premium" className="flex items-center gap-2">
                     <span className="material-symbols-outlined">
                       workspace_premium
                     </span>{" "}

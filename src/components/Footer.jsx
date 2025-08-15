@@ -27,11 +27,11 @@ const Footer = () => {
 
         <nav>
     <h6 className="footer-title text-xl font-bold bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent">Legal</h6>
-    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PkX8tBKLACbbLD/terms' target='_blank' >Terms and Conditions</a>
-    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PkX8tBKLACbbLD/refund' target='_blank' >Cancellation and Refund</a>
-    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PkX8tBKLACbbLD/shipping' target='_blank' >Shipping and Delivery</a>
-    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PkX8tBKLACbbLD/privacy' target='_blank' >Privacy Policy</a>
-    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PkX8tBKLACbbLD/contact_us' target='_blank' >Contact Us</a>
+    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PlGBSxfziRx1U9/terms' target='_blank' >Terms and Conditions</a>
+    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PlGBSxfziRx1U9/refund' target='_blank' >Cancellation and Refund</a>
+    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PlGBSxfziRx1U9/shipping' target='_blank' >Shipping and Delivery</a>
+    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PlGBSxfziRx1U9/privacy' target='_blank' >Privacy Policy</a>
+    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PlGBSxfziRx1U9/contact_us' target='_blank' >Contact Us</a>
   </nav>
 
         <nav>
