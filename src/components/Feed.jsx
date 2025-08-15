@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from 'react-redux';
 import { addFeed } from '../utils/appStoreSlices/feedSlice';
@@ -18,6 +18,7 @@ const Feed = () => {
   const getFeed = async() => {
     if(feed) return; 
     try{
+      setIsLoading(true);
       const res = await axios.get(BASE_URL + "/user/feed", { withCredentials : true });
       dispatch(addFeed(res?.data.data));
     }catch(err){
@@ -38,13 +39,13 @@ const Feed = () => {
   if(!feed) return;
 
   if(feed.length <= 0) return (
-    <div className="min-h-screen flex justify-center items-center bg-slate-100 p-4">
-      <div className="bg-white shadow-lg rounded-lg p-6 max-w-md text-center">
-        <IoMdCheckmarkCircleOutline className="text-4xl text-blue-500 mx-auto mb-3" />
-        <h1 className="text-xl font-semibold text-gray-800">
+    <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100 p-4">
+      <div className="bg-base-300 shadow-lg rounded-lg p-6 max-w-md text-center">
+        <IoMdCheckmarkCircleOutline className="text-4xl text-rose-700 mx-auto mb-3" />
+        <h1 className="text-xl font-semibold bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent">
           No More Profiles Available
         </h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-yellow-500 mt-2">
           You have interacted with all the profiles. Please check back later for new connections!
         </p>
       </div>
@@ -52,7 +53,7 @@ const Feed = () => {
   )
 
   return (
-    <div className="flex-grow flex justify-center items-center py-8 bg-slate-200 min-h-screen">
+    <div className="flex-grow flex justify-center items-center py-8 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100 min-h-screen">
       {isLoading ? (
         <Loader />
       ) : feed ? (
@@ -61,11 +62,11 @@ const Feed = () => {
         </div>
       ) : (
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-md text-center">
-        <IoMdCheckmarkCircleOutline className="text-4xl text-blue-500 mx-auto mb-3" />
-        <h1 className="text-xl font-semibold text-gray-800">
+        <IoMdCheckmarkCircleOutline className="text-4xl text-rose-700 mx-auto mb-3" />
+        <h1 className="text-xl font-semibold bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent">
           No More Profiles Available
         </h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-yellow-500 mt-2">
           You have interacted with all the profiles. Please check back later for new connections!
         </p>
       </div>
