@@ -123,7 +123,7 @@ const Login = () => {
       </div>
 
       <div className="card shadow-2xl w-[400px] rounded-xl p-8 m-6">
-        <h1 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold text-center mb-4 text-rose-600">
           {isLoginForm ? "Login to Your Account" : "Create an Account"}
         </h1>
         
@@ -138,7 +138,7 @@ const Login = () => {
             <>
               <div className="form-control ">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-500">
+                  <span className="label-text font-medium text-gray-800">
                     First Name
                   </span>
                 </label>
@@ -152,7 +152,7 @@ const Login = () => {
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-500">
+                  <span className="label-text font-medium text-gray-800">
                     Last Name
                   </span>
                 </label>
@@ -168,7 +168,7 @@ const Login = () => {
           )}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-medium text-gray-500">
+              <span className="label-text font-medium text-gray-800">
                 Email Address
               </span>
             </label>
@@ -183,7 +183,7 @@ const Login = () => {
           </div>
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-medium text-gray-500">
+              <span className="label-text font-medium text-gray-800">
                 Password
               </span>
             </label>
