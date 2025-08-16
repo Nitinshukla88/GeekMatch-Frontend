@@ -17,10 +17,89 @@ const EditProfile = ({ userInfo }) => {
 
   const dispatch = useDispatch();
 
-  const handleSave = async () => {
-    setIsProfileChanged(true);
-    setError("");
+  function isValidString(input) {
+    if (
+      !input ||
+      input.length < 3 ||
+      input.length > 50 ||
+      !/^[a-zA-Z\s]+$/.test(input)
+    ) {
+      console.log("isValid", input);
+      return false;
+    }
+    return true;
+  }
+
+  function isValidPhotoUrl(url) {
+    // First check if it's a valid URL
     try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function isValidAge(input) {
+    if (
+      input === "" ||
+      input === null ||
+      isNaN(input) ||
+      input <= 17 ||
+      input >= 105
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  function isValidGender(input) {
+    if (!["male", "female", "others"].includes(input.toLowerCase())) {
+      return false;
+    }
+    return true;
+  }
+
+  function isValidAbout(input) {
+    if (about.length > 500) {
+      return false;
+    }
+    return true;
+  }
+
+  const handleSave = async () => {
+    // setIsProfileChanged(true);
+    // setError("");
+    try {
+      if (!isValidString(firstName)) {
+        setError(
+          "Minimum 3 to maximum 50 alphabet only characters required in first name."
+        );
+        return;
+      }
+      if (!isValidString(lastName)) {
+        setError(
+          "Minimum 3 to maximum 50 alphabet only characters required in last name."
+        );
+        return;
+      }
+      if (!isValidGender(gender)) {
+        setError("Please select a valid gender.It must be male, female or others.");
+        return;
+      }
+      if (!isValidAge(age)) {
+        setError("Please enter a valid age between 18 and 120.");
+        return;
+      }
+      if (!isValidAbout(about)) {
+        setError("About section cannot exceed 500 characters.");
+        return;
+      }
+      if (!isValidPhotoUrl(photo)) {
+        setError("Please enter a valid photo URL. It must end with .jpg, .jpeg, .gif, .webp or .png");
+        return;
+      }
+      setError("");
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
         { firstName, lastName, gender, age, about, photo },
