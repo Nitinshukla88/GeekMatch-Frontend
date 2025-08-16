@@ -8,10 +8,10 @@ import { addUser } from "../utils/appStoreSlices/userSlice";
 const EditProfile = ({ userInfo }) => {
   const [firstName, setFirstName] = useState(userInfo?.firstName);
   const [lastName, setLastName] = useState(userInfo?.lastName);
-  const [gender, setGender] = useState(userInfo?.gender);
-  const [age, setAge] = useState(userInfo?.age);
-  const [about, setAbout] = useState(userInfo?.about);
-  const [photo, setPhoto] = useState(userInfo?.photo || "");
+  const [gender, setGender] = useState(userInfo?.gender || "");
+  const [age, setAge] = useState(userInfo?.age || "");
+  const [about, setAbout] = useState(userInfo?.about || "");
+  const [photo, setPhoto] = useState(userInfo?.photo || "https://geographyandyou.com/images/user-profile.png");
   const [error, setError] = useState("");
   const [isProfileChanged, setIsProfileChanged] = useState(false);
 
