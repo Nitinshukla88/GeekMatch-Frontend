@@ -33,24 +33,24 @@ const UserCard = ({ user }) => {
   }
 
   return (
-    <div className="flex justify-center my-16">
-      <div className="card bg-base-300 w-96 shadow-xl">
-        <figure>
-          <img src={photo} alt="user-photo" />
+    <div className="flex flex-col justify-center my-8 mx-8 max-[320px]:mx-4 w-96 max-[470px]:w-72 max-[320px]:w-full">
+      <div className="card glass w-full bg-gradient-to-r from-rose-500 to-blue-400 text-white shadow-blue-900 shadow-2xl">
+        <figure className="w-full h-96 flex items-center justify-center bg-gray-300 mx-auto">
+          <img src={photo || "https://geographyandyou.com/images/user-profile.png"} alt="photo"  className="w-full h-full object-cover"/>
         </figure>
         <div className="card-body">
           <h2 className="card-title">{firstName + " " + lastName}</h2>
-          {age && gender && <h3>{age + ", " + gender}</h3>}
-          <p>{about}</p>
-          <div className="card-actions justify-center">
+          {age && gender && <p>{age + ", " + gender}</p>}
+          <p className="text-gray-100">{about}</p>
+          <div className="card-actions justify-center mt-4">
             <button
-              className="btn btn-primary mx-2"
+              className="btn btn-primary text-yellow-500 bg-base-300 border-none hover:text-base-300"
               onClick={() => handleSendRequest("ignored", _id)}
             >
               Ignore
             </button>
             <button
-              className="btn btn-secondary"
+              className="btn btn-accent text-rose-500 bg-base-300 border-none hover:text-base-300"
               onClick={() => handleSendRequest("interested", _id)}
             >
               Interested
