@@ -1,24 +1,30 @@
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BASE_URL } from '../utils/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { addConnections } from '../utils/appStoreSlices/connectionSlice'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Connections = () => {
-
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const connections = useSelector(store => store?.connections);
-    console.log(connections);
-
+    const isPremium = useSelector((store) => store?.user?.isPremium);
     const fetchConnections = async() => {
+        setLoading(true);
         try{
             const res = await axios.get(BASE_URL + "/user/connections", { withCredentials : true });
             dispatch(addConnections(res?.data?.data));
         }catch(err){
             console.error(err);
-        }   
+            if(err.status === 401) {
+                navigate("/app/login");
+            }
+        }finally{
+            setLoading(false);
+        }
     }
 
     useEffect(()=> {
