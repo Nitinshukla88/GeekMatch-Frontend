@@ -4,6 +4,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/appStoreSlices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = ({ userInfo }) => {
   const [firstName, setFirstName] = useState(userInfo?.firstName);
@@ -11,11 +12,14 @@ const EditProfile = ({ userInfo }) => {
   const [gender, setGender] = useState(userInfo?.gender || "");
   const [age, setAge] = useState(userInfo?.age || "");
   const [about, setAbout] = useState(userInfo?.about || "");
-  const [photo, setPhoto] = useState(userInfo?.photo || "https://geographyandyou.com/images/user-profile.png");
+  const [photo, setPhoto] = useState(
+    userInfo?.photo || "https://geographyandyou.com/images/user-profile.png"
+  );
   const [error, setError] = useState("");
   const [isProfileChanged, setIsProfileChanged] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function isValidString(input) {
     if (
@@ -68,8 +72,6 @@ const EditProfile = ({ userInfo }) => {
   }
 
   const handleSave = async () => {
-    // setIsProfileChanged(true);
-    // setError("");
     try {
       if (!isValidString(firstName)) {
         setError(
@@ -84,7 +86,9 @@ const EditProfile = ({ userInfo }) => {
         return;
       }
       if (!isValidGender(gender)) {
-        setError("Please select a valid gender.It must be male, female or others.");
+        setError(
+          "Please select a valid gender.It must be male, female or others."
+        );
         return;
       }
       if (!isValidAge(age)) {
@@ -96,10 +100,13 @@ const EditProfile = ({ userInfo }) => {
         return;
       }
       if (!isValidPhotoUrl(photo)) {
-        setError("Please enter a valid photo URL. It must end with .jpg, .jpeg, .gif, .webp or .png");
+        setError(
+          "Please enter a valid photo URL. It must end with .jpg, .jpeg, .gif, .webp or .png"
+        );
         return;
       }
       setError("");
+      setIsProfileChanged(true);
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
         { firstName, lastName, gender, age, about, photo },
@@ -110,125 +117,148 @@ const EditProfile = ({ userInfo }) => {
         setIsProfileChanged(false);
       }, 3000);
     } catch (err) {
-      setError(err?.response?.data);
+      console.log(err);
+      if (err.status == 401) {
+        navigate("/app/login");
+      } else {
+        setError(err?.response?.data);
+      }
     }
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="flex justify-center items-center mx-12">
-        <div className="card bg-primary text-primary-content w-[35rem]">
-          <div className="card-body">
-            <h2 className="card-title justify-center text-3xl">Edit Profile</h2>
-            <div className="flex">
-              <div className="mx-4">
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text text-black font-semibold">
-                      First Name:
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Type here"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    className="input input-bordered w-full max-w-xs text-white"
-                  />
+    <>
+      <div className="container mx-auto py-8 text-gray-700">
+        <div className="flex flex-wrap justify-center gap-8">
+          <UserCard user={{ firstName, lastName, gender, age, photo, about }} />
+          <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-6">
+            <h2 className="text-3xl font-bold text-center mb-6">
+              Edit Profile
+            </h2>
+            <form className="space-y-4">
+              <div className="form-control">
+                <label className="label text-sm font-medium text-gray-500">
+                  First Name:
                 </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text text-black font-semibold">
-                      Last Name:
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Type here"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    className="input input-bordered w-full max-w-xs text-white"
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text text-black font-semibold">
-                      Gender:
-                    </span>
-                  </div>
-                  <select
-                    className="text-white bg-base-100 rounded-lg py-3 px-3"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                  >
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="others">Others</option>
-                  </select>
-                </label>
+                <input
+                  type="text"
+                  placeholder="Enter your first name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="input input-bordered w-full focus:outline-none focus:ring focus:ring-blue-300 bg-gray-200"
+                />
               </div>
-              <div className="mx-4">
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text text-black font-semibold">
-                      Age:
-                    </span>
-                  </div>
+              <div className="form-control">
+                <label className="label text-sm font-medium text-gray-500">
+                  Last Name:
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter your last name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="input input-bordered w-full focus:outline-none focus:ring focus:ring-blue-300 bg-gray-200"
+                />
+              </div>
+              <div className="form-control">
+                <label className="label text-sm font-medium text-gray-500">
+                  Gender:
+                </label>
+                <div className="flex items-center space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="male"
+                      checked={gender === "male"}
+                      className="radio radio-info"
+                      onChange={(e) => setGender(e.target.value)}
+                    />
+                    <span className="ml-2">Male</span>
+                  </label>
+                  <label className="flex items-center text-gray-500">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="female"
+                      checked={gender === "female"}
+                      className="radio radio-info"
+                      onChange={(e) => setGender(e.target.value)}
+                    />
+                    <span className="ml-2">Female</span>
+                  </label>
+                  <label className="flex items-center text-gray-500">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="others"
+                      checked={gender === "others"}
+                      className="radio radio-info"
+                      onChange={(e) => setGender(e.target.value)}
+                    />
+                    <span className="ml-2">Other</span>
+                  </label>
+                </div>
+                <div className="form-control">
+                  <label className="label text-sm font-medium text-gray-500">
+                    Age:
+                  </label>
                   <input
-                    type="text"
-                    placeholder="Type here"
+                    type="number"
+                    className="input input-bordered  py w-full focus:outline-none focus:ring focus:ring-blue-300 bg-gray-200 appearance-none overflow-hidden"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
-                    className="input input-bordered w-full max-w-xs text-white"
+                    placeholder="Enter your age"
                   />
-                </label>
+                </div>
                 <label className="form-control w-full max-w-xs">
                   <div className="label">
-                    <span className="label-text text-black font-semibold">
+                    <span className="label-text text-gray-500 font-semibold">
                       About:
                     </span>
                   </div>
                   <textarea
-                    className="textarea text-white text-base h-24"
+                    className="textarea text-base bg-gray-200 h-24"
                     placeholder="Type here"
                     value={about}
                     onChange={(e) => setAbout(e.target.value)}
                   ></textarea>
                 </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text text-black font-semibold">
-                      Photo URL:
-                    </span>
-                  </div>
+                <div className="form-control">
+                  <label className="label text-sm font-medium text-gray-500">
+                    Photo URL:
+                  </label>
                   <input
                     type="text"
-                    placeholder="Type here"
+                    className="input input-bordered w-full focus:outline-none focus:ring focus:ring-blue-300 bg-gray-200"
                     value={photo}
                     onChange={(e) => setPhoto(e.target.value)}
-                    className="input input-bordered w-full max-w-xs text-white"
+                    placeholder="Enter the photo URL"
                   />
-                </label>
+                </div>
               </div>
-            </div>
-            <p className="text-red-600 font-semibold">{error}</p>
-            <div className="card-actions justify-center mt-3">
-              <button className="btn btn-secondary" onClick={handleSave}>
-                Save
-              </button>
-            </div>
+              {error && <p className="text-red-600 font-semibold">{error}</p>}
+              <div className="flex flex-col items-center space-y-4">
+                <button
+                  className="btn btn-primary text-white w-full"
+                  onClick={handleSave}
+                  type="button"
+                >
+                  Save profile
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      <UserCard user={{ firstName, lastName, gender, age, photo, about }} />
-      {isProfileChanged && (
-        <div className="toast toast-top toast-center">
-          <div className="alert alert-success">
-            <span>Profile changed Successfully</span>
+        {isProfileChanged && (
+          <div className="toast toast-top toast-center z-50">
+            <div className="alert alert-success shadow-lg">
+              <span>Profile changed Successfully</span>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+    </>
   );
 };
 
