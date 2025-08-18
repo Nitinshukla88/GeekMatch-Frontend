@@ -51,7 +51,7 @@ const Premium = () => {
   return isUserPremium ? (
     <div className="text-center text-2xl font-semibold">You are already a Premium user!!</div>
   ) : (
-    <div className="flex justify-center items-center my-16">
+    <div className="flex justify-center items-center my-16 flex-wrap gap-8">
       <div className="card bg-base-300 w-96 shadow-2xl m-4 py-10">
         <div className="card-body items-center text-center">
           <h1 className="card-title text-3xl font-bold my-2">
@@ -75,7 +75,7 @@ const Premium = () => {
           </div>
         </div>
       </div>
-      <div className="card bg-base-300 w-96 shadow-2xl m-4 py-10">
+      <div className="card bg-base-300 w-96 shadow-2xl m-4 py-12">
         <div className="card-body items-center text-center">
           <h1 className="card-title text-3xl font-bold text-yellow-500 my-2">
             Gold Membership
