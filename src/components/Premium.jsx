@@ -1,16 +1,24 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
+import { useDispatch } from "react-redux";
 
 const Premium = () => {
   const [isUserPremium, setisUserPremium] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   useEffect(() => {
     verifyPremiumUser();
   }, []);
   const verifyPremiumUser = async () => {
+    try{
+    setLoading(true);
     const res = await axios.get(BASE_URL + "/premium/verify", {
       withCredentials: true,
     });
+  } catch (error) {
+    console.error("Error verifying premium user:", error);
+  }
 
     if (res.data.isPremium) {
       setisUserPremium(true);
@@ -51,19 +59,20 @@ const Premium = () => {
   return isUserPremium ? (
     <div className="text-center text-2xl font-semibold">You are already a Premium user!!</div>
   ) : (
-    <div className="flex justify-center items-center my-16 flex-wrap gap-8">
+    <div className="flex justify-center items-center flex-wrap gap-8 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100 min-h-screen">
       <div className="card bg-base-300 w-96 shadow-2xl m-4 py-10">
-        <div className="card-body items-center text-center">
+        <div className="card-body items-center text-center text-slate-300">
           <h1 className="card-title text-3xl font-bold my-2">
             Silver Membership
           </h1>
           <ul className="my-3">
-            <li className="list-disc text-left">Chat with other people</li>
+            <li className="list-disc text-left">💬Chat with your connections</li>
             <li className="list-disc text-left">
-              100 connection requesets per day!
+              💌50 connection requesets per day only!
             </li>
-            <li className="list-disc text-left">Blue tick</li>
-            <li className="list-disc text-left">3 months validity</li>
+            <li className="list-disc text-left">🥈Blue tick</li>
+            <li className="list-disc text-left">🕒3 months validity</li>
+            <li className="list-disc text-left">💰₹ 399/- per month only</li>
           </ul>
           <div className="card-actions">
             <button
@@ -76,18 +85,19 @@ const Premium = () => {
         </div>
       </div>
       <div className="card bg-base-300 w-96 shadow-2xl m-4 py-12">
-        <div className="card-body items-center text-center">
+        <div className="card-body items-center text-center text-yellow-500">
           <h1 className="card-title text-3xl font-bold text-yellow-500 my-2">
             Gold Membership
           </h1>
           <ul className="my-3">
-            <li className="list-disc text-left">Chat with other people</li>
-            <li className="list-disc text-left">Video calling</li>
+            <li className="list-disc text-left"> 💬Chat with your connections</li>
+            <li className="list-disc text-left"> 📹Video calling with your connections</li>
             <li className="list-disc text-left">
-              Unlimited connection requesets per day!
+              💌Unlimited connection requesets per day!
             </li>
-            <li className="list-disc text-left">Gold tick</li>
-            <li className="list-disc text-left">6 months validity</li>
+            <li className="list-disc text-left">🥇Gold tick</li>
+            <li className="list-disc text-left">🕧6 months validity</li>
+            <li className="list-disc text-left">💰₹ 599/- per month only</li>
           </ul>
           <div className="card-actions">
             <button

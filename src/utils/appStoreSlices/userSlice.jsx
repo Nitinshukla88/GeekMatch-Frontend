@@ -10,15 +10,15 @@ const userSlice = createSlice({
         removeUser : (state, action) => {
             return null;
         }, 
-        updateIsSilverPremium : (state, action) => {
-            return {...state, isSilverPremium: action.payload};
+        updateIsPremium : (state, action) => {
+            return {...state, isPremium: action.payload};
         },
-        updateIsGoldPremium : (state, action) => {
-            return {...state, isGoldPremium: action.payload};
+        updateMembershipType : (state, action) => {
+            return {...state, membershipType: action.payload};
         }
     }
 })
 
-export const { addUser, removeUser, updateIsSilverPremium, updateIsGoldPremium } = userSlice.actions;
+export const { addUser, removeUser, updateIsPremium, updateMembershipType } = userSlice.actions;
 
 export default userSlice.reducer;
