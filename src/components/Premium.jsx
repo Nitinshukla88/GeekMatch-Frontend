@@ -2,13 +2,19 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
+import { updateIsPremium, updateMembershipType } from "../utils/appStoreSlices/userSlice";
+import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
+import { use } from "react";
 
 const Premium = () => {
-  const [isUserPremium, setisUserPremium] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isUserPremium = useSelector((state) => state.user.isPremium);
+  const membershipType = useSelector((state) => state.user.membershipType);
   useEffect(() => {
-    verifyPremiumUser();
+    window.scrollTo(0, 0);
   }, []);
   const verifyPremiumUser = async () => {
     try{
@@ -16,16 +22,23 @@ const Premium = () => {
     const res = await axios.get(BASE_URL + "/premium/verify", {
       withCredentials: true,
     });
+    if (res.data.isPremium) {
+      dispatch(updateIsPremium(res.data.isPremium));
+      dispatch(updateMembershipType(res.data.membershipType));
+    }
   } catch (error) {
     console.error("Error verifying premium user:", error);
-  }
-
-    if (res.data.isPremium) {
-      setisUserPremium(true);
+    if(error.status == 401) {
+      navigate("/app/login");
+    }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleBuyPremium = async (type) => {
+    try {
+      setLoading(true);
     const order = await axios.post(
       BASE_URL + "/payment/create",
       { membershipType: type },
@@ -51,13 +64,47 @@ const Premium = () => {
       },
       handler: verifyPremiumUser,
     };
+    setLoading(false);
 
     const rzp = new window.Razorpay(options);
     rzp.open();
+  } catch(error) {
+    console.error("Error during payment process:", error);
+    if(error.status === 401) {
+      navigate("/app/login");
+    }
+  }
   };
 
+  if(loading) {
+    return <Loader />;
+  }
+
   return isUserPremium ? (
-    <div className="text-center text-2xl font-semibold">You are already a Premium user!!</div>
+    <div className="min-h-screen bg-gradient-to-r from-blue-600 to-yellow-400 text-white flex flex-col items-center px-6 py-10">
+      <h1 className="text-4xl font-bold mb-4">Welcome,{membershipType === "silver" ? " You're a Silver" : " You're a Gold"} Premium User!</h1>
+      <p className="text-lg text-center mb-6 max-w-3xl">
+        {membershipType === "silver" ? "Thank you for subscribing to our Silver premium membership. You now have access" : "Thank you for subscribing to our Gold premium membership. You now have access"}
+        to exclusive features like chatting eligibility, a verified blue tick,
+        and more!
+      </p>
+      <ul className="list-disc list-inside text-left text-lg max-w-xl mb-8">
+        <li>Chat with your connections seamlessly.</li>
+        <li>Show off your verified profile with a blue tick.</li>
+        <li>Enjoy priority customer support and an ad-free experience.</li>
+      </ul>
+      <div className="flex flex-col items-center w-full">
+        <p className="text-2xl font-semibold mb-6">
+          Explore Your Premium Benefits
+        </p>
+        <button
+          onClick={() => navigate("/connections")}
+          className="btn btn-primary text-lg px-8  rounded-lg shadow-md hover:bg-green-500 transition duration-300 bg-green-400"
+        >
+          Go to Connections
+        </button>
+      </div>
+    </div>
   ) : (
     <div className="flex justify-center items-center flex-wrap gap-8 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100 min-h-screen">
       <div className="card bg-base-300 w-96 shadow-2xl m-4 py-10">
