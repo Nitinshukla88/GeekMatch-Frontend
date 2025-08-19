@@ -97,7 +97,7 @@ const Premium = () => {
         </p>
         <button
           onClick={() => navigate("/app/connections")}
-          className="btn btn-primary text-lg px-8  rounded-lg shadow-md hover:bg-green-500 transition duration-300 bg-green-400"
+          className="btn btn-primary text-lg px-8  rounded-lg shadow-md hover:bg-green-500 transition duration-300 bg-green-400 border-none"
         >
           Go to Connections
         </button>

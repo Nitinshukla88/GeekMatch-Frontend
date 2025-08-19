@@ -1,73 +1,133 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { addRequests, removeRequests } from "../utils/appStoreSlices/requestsSlice";
+import {
+  addRequests,
+  removeRequests,
+} from "../utils/appStoreSlices/requestsSlice";
+import { useNavigate } from "react-router-dom";
+import { removeUser } from "../utils/appStoreSlices/userSlice";
+import Loader from "./Loader";
+import { IoPersonRemoveOutline } from "react-icons/io5";
 
 const Requests = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const friendRequests = useSelector((store) => store?.requests);
+  const [loading, setLoading] = useState(false);
 
   const getRequests = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(BASE_URL + "/user/requests/received", {
         withCredentials: true,
       });
       dispatch(addRequests(res?.data?.matchedRequests));
     } catch (err) {
       console.error(err);
+      if (err.status === 401) {
+        navigate("/app/login");
+        dispatch(removeUser());
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
-  const reviewRequest = async(status, _id) => {
-    try{
-        const res = axios.post(BASE_URL + "/request/review/" + status + "/" + _id, {}, {withCredentials: true});
-        console.log(res);
-        dispatch(removeRequests(_id))
-    }catch(err){    
-        console.error(err);
+  const reviewRequest = async (status, _id) => {
+    try {
+      setLoading(true);
+      const res = axios.post(
+        BASE_URL + "/request/review/" + status + "/" + _id,
+        {},
+        { withCredentials: true }
+      );
+      console.log(res);
+      dispatch(removeRequests(_id));
+    } catch (err) {
+      console.error(err);
+      if (err.status === 401) {
+        navigate("/app/login");
+        dispatch(removeUser());
+      }
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     getRequests();
   }, []);
 
-  if (!friendRequests) return;
+  if (loading) {
+    return <Loader />;
+  }
 
-  if (friendRequests.length === 0) return <h2 className="my-10 text-white text-center font-medium text-4xl">No friend Requests !!</h2>;
+  if (friendRequests?.length === 0)
+    return (
+      <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100 p-4">
+        <div className="bg-base-300 shadow-lg rounded-lg p-6 max-w-md text-center">
+          <IoPersonRemoveOutline className="text-4xl text-red-700 mx-auto mb-3" />
+          <h1 className="text-xl font-semibold bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent">
+            No Connection Requests
+          </h1>
+          <p className="text-yellow-500 mt-2">
+            You have no connection requests currently. Check back
+            later for new requests!
+          </p>
+        </div>
+      </div>
+    );
 
   return (
-    <div className="text-center mx-auto">
-      <h1 className="my-10 text-purple-600 font-medium text-4xl">
-        Friend Requests
+    <div className="flex flex-col items-center py-10 min-h-screen px-4 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100">
+      <h1 className="font-bold bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent text-5xl mb-6 text-center">
+        Connection Requests
       </h1>
-      {friendRequests.map((request) => {
-        const { _id, firstName, lastName, age, gender, about, skills, photo } =
-          request?.fromUserId;
-        return (
-          <div className="bg-base-300 mx-auto my-4 flex w-4/5 items-center justify-between" key={_id}>
-            <div className="mx-4 my-4">
-              <img
-                src={photo}
-                alt="user-photo"
-                className="w-20 h-20 rounded-2xl"
-              />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+        {friendRequests?.map((request) => {
+          const { _id, firstName, lastName, age, gender, about, photo } =
+            request?.fromUserId;
+          return (
+            <div
+              className="shadow-md rounded-lg p-4 flex flex-col items-center text-center bg-white text-black"
+              key={_id}
+            >
+              <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300">
+                <img
+                  src={photo}
+                  alt="user-photo"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className=" mt-4">
+                <h2 className="font-bold text-lg">
+                  {`${firstName} ${lastName}`}
+                </h2>
+                {age && gender && (
+                  <p className="text-sm text-gray-500">{`${age}, ${gender}`}</p>
+                )}
+                <p className="text-sm text-gray-700 mt-2">{about}</p>
+              </div>
+              <div className="flex gap-2 mt-4">
+                <button
+                  className="btn btn-sm btn-primary text-white"
+                  onClick={() => reviewRequest("accepted", request?._id)}
+                >
+                  Accept
+                </button>
+                <button
+                  className="btn btn-sm btn-error text-gray-100"
+                  onClick={() => reviewRequest("rejected", request._id)}
+                >
+                  Reject
+                </button>
+              </div>
             </div>
-            <div className=" my-4">
-              <h2 className="text-xl font-semibold">
-                {firstName + " " + lastName}
-              </h2>
-              <h2>{age + ", " + gender}</h2>
-              <h2>{about}</h2>
-            </div>
-            <div className="flex justify-end">
-              <button className="btn btn-primary mx-2" onClick={()=> reviewRequest("rejected", request?._id)}>Reject</button>
-              <button className="btn btn-secondary mx-2" onClick={() => reviewRequest("accepted", request?._id)}>Accept</button>
-            </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

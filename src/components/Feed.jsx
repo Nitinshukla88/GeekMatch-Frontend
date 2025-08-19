@@ -56,7 +56,7 @@ const Feed = () => {
           </h1>
           <p className="text-yellow-500 mt-2">
             You have interacted with all the profiles. Please check back later
-            for new connections!
+            for new Profiles!
           </p>
         </div>
       </div>
@@ -78,7 +78,7 @@ const Feed = () => {
           </h1>
           <p className="text-yellow-500 mt-2">
             You have interacted with all the profiles. Please check back later
-            for new connections!
+            for new Profiles!
           </p>
         </div>
       )}
