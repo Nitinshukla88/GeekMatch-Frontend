@@ -56,7 +56,7 @@ const Login = () => {
         setError(error.message);
       } else {
         //fallback for any other error
-        setError("Signup failed. Please try again.");
+        setError("Login failed. Please try again.");
       }
     }
   };
