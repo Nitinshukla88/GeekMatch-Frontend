@@ -15,7 +15,6 @@ const Feed = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const getFeed = async () => {
-    if (feed) return;
     try {
       setIsLoading(true);
       const res = await axios.get(BASE_URL + "/user/feed", {

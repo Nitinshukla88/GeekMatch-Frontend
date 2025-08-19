@@ -14,14 +14,17 @@ const Premium = () => {
   const membershipType = useSelector((state) => state?.user?.membershipType);
   useEffect(() => {
     window.scrollTo(0, 0);
-    verifyPremiumUser();
-  }, [dispatch]);
+  }, []);
+
   const verifyPremiumUser = async () => {
     try{
     setLoading(true);
     const res = await axios.get(BASE_URL + "/premium/verify", {
       withCredentials: true,
     });
+    console.log(res);
+    console.log(res?.data?.isPremium);
+    console.log(res?.data?.membershipType);
     if (res.data.isPremium) {
       dispatch(updateIsPremium(res.data.isPremium));
       dispatch(updateMembershipType(res.data.membershipType));
@@ -36,12 +39,12 @@ const Premium = () => {
     }
   };
 
-  const handleBuyPremium = async (type) => {
+  const handleBuyPremium = async (membership) => {
     try {
       setLoading(true);
     const order = await axios.post(
       BASE_URL + "/payment/create",
-      { membershipType: type },
+      { membershipType: membership },
       { withCredentials: true }
     );
 
@@ -81,15 +84,15 @@ const Premium = () => {
   }
 
   return isUserPremium ? (
-    <div className="min-h-screen bg-gradient-to-r from-blue-600 to-yellow-400 text-white flex flex-col items-center px-6 py-10">
-      <h1 className="text-4xl font-bold mb-4">Welcome,{membershipType === "silver" ? " You're a Silver" : " You're a Gold"} User!</h1>
+    <div className="min-h-screen bg-gradient-to-r from-blue-600 to-yellow-400 text-white flex flex-col items-center justify-center px-6 py-10">
+      <h1 className="text-4xl font-bold mb-4 text-center">Welcome,{membershipType === "silver" ? " You're a Silver" : " You're a Gold"} User!</h1>
       <p className="text-lg text-center mb-6 max-w-3xl">
         {membershipType === "silver" ? "Thank you for subscribing to our Silver premium membership. You now have access" : "Thank you for subscribing to our Gold premium membership. You now have access"}
         to exclusive features like chatting {membershipType === "gold" && "and video calling "}eligibility, a verified {membershipType === "gold" ? "gold" : "silver"} tick,
         and more!
       </p>
       <div className="flex flex-col items-center w-full">
-        <p className="text-2xl font-semibold mb-6">
+        <p className="text-2xl font-semibold mb-6 text-center">
           Explore Your Premium Benefits
         </p>
         <button
