@@ -9,6 +9,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import { IoPeopleOutline } from "react-icons/io5";
+import { removeUser } from "../utils/appStoreSlices/userSlice";
 
 const Connections = () => {
   const [loading, setLoading] = useState(false);
@@ -16,8 +17,7 @@ const Connections = () => {
   const navigate = useNavigate();
 
   const connections = useSelector((store) => store?.connections);
-  const isSilverPremium = useSelector((store) => store?.user?.isSilverPremium);
-  const isGoldPremium = useSelector((store) => store?.user?.isGoldPremium);
+  const membershipType = useSelector((store) => store?.user?.membershipType);
   const fetchConnections = async () => {
     setLoading(true);
     try {
@@ -29,6 +29,7 @@ const Connections = () => {
       console.error(err);
       if (err.status === 401) {
         navigate("/app/login");
+        dispatch(removeUser());
       }
     } finally {
       setLoading(false);
@@ -116,9 +117,9 @@ const Connections = () => {
                 <p className="text-sm text-yellow-500 mt-2">{about}</p>
               </div>
               <div className="flex gap-2 mt-4 ">
-                <Link to={isSilverPremium || isGoldPremium ? `/app/chat/` + _id : `/app/premium`}>
+                <Link to={membershipType === "silver" || membershipType === "gold" ? `/app/chat/` + _id : `/app/premium`}>
                   <button className="btn btn-sm btn-success text-white">
-                    {isSilverPremium || isGoldPremium ? "Message" : "Chat with Silver Premium"}
+                    {membershipType === "silver" || membershipType === "gold" ? "Message" : "Chat with Silver Premium"}
                   </button>
                 </Link>
 
@@ -129,9 +130,9 @@ const Connections = () => {
                   Remove
                 </button>
               </div>
-              <Link to={isGoldPremium ? "/app/videoChat/" + _id : "/app/premium"}>
+              <Link to={membershipType === "gold" ? "/app/videoChat/" + _id : "/app/premium"}>
                 <button className="btn btn-sm btn-secondary text-white my-3">
-                    {isGoldPremium ? "Video Chat" : "Video Chat with Gold Premium"}
+                    {membershipType === "gold" ? "Video Chat" : "Video Chat with Gold Premium"}
                   </button>
               </Link>
             </div>

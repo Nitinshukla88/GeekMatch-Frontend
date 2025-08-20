@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import { removeUser } from "../utils/appStoreSlices/userSlice";
+import { addConnections } from "../utils/appStoreSlices/connectionSlice";
+import Loader from "./Loader";
 
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -13,49 +16,144 @@ const Chat = () => {
 
   const loggedInUser = useSelector((store) => store?.user);
 
-  const { _id, firstName } = loggedInUser || {};
+  const { _id } = loggedInUser || {};
+  const [loading, setLoading] = useState(false);
+  const containerRef = useRef(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [chatPerson, setChatPerson] = useState(null);
+  const connections = useSelector((store) => store?.connections);
 
-  const fetchChatMessages = async() => {
-    try{
-    const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {withCredentials : true });
-    const messagess = chat?.data?.messages;
-    const newMessages = messagess.map((msg) => ({
-      firstName: msg?.senderId?.firstName,
-      chatMessage: msg?.text
-    }));
-    
-    setMessages((messages) => [...messages, ...newMessages]);    
-    }catch(err){
+  const fetchChatMessages = async () => {
+    try {
+      setLoading(true);
+      const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
+        withCredentials: true,
+      });
+      const messagess = chat?.data?.messages;
+      const newMessages = messagess.map((msg) => {
+        const { senderId, text, createdAt, updatedAt } = msg;
+        return {
+          senderId: senderId._id,
+          firstName: senderId.firstName,
+          lastName: senderId.lastName,
+          photo: senderId?.photo,
+          text,
+          createdAt,
+          updatedAt,
+        };
+      });
+
+      setMessages((messages) => [...messages, ...newMessages]);
+    } catch (err) {
       console.log(err.message);
+      if (err.response?.status === 401) {
+        dispatch(removeUser());
+        navigate("/app/login");
+      } else if (err.response?.status === 403) {
+        navigate("/app/premium");
+      }
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  useEffect(()=>{
+  const fetchConnections = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(BASE_URL + "/user/connections", {
+        withCredentials: true,
+      });
+      dispatch(addConnections(res?.data?.data));
+    } catch (err) {
+      console.error(err);
+      if (err.status === 401) {
+        navigate("/app/login");
+        dispatch(removeUser());
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!connections) {
+      fetchChatMessages();
+    } else {
+      setChatPerson(
+        connections.filter((connection) => connection?._id === targetUserId)[0]
+      );
+    }
+  }, [connections]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
     fetchChatMessages();
-  },[])
+  }, []);
 
   useEffect(() => {
     if (!_id) return;
     const socket = createSocketConnection();
 
-    socket.emit("joinChat", { firstName, _id, targetUserId });
+    socket.emit("joinChat", { _id, targetUserId });
 
-    socket.on("messageReceived", ({ firstName, chatMessage }) => {
-      console.log(firstName + " " + chatMessage);
-      setMessages((messages) => [...messages, { firstName, chatMessage }]);
-    });
+    socket.on(
+      "messageReceived",
+      ({ senderId, firstName, lastName, text, createdAt }) => {
+        createdAt = formatTime(createdAt);
+        setMessages((messages) => [
+          ...messages,
+          { senderId, firstName, lastName, text, createdAt },
+        ]);
+      }
+    );
 
     return () => {
       socket.disconnect();
     };
   }, [_id, targetUserId]);
 
-  const sendChatMessage = () => {
-    const socket = createSocketConnection();
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: containerRef.current.scrollHeight,
+      });
+    }
+  }, [messages]);
 
-    socket.emit("sendMessage", { firstName, _id, targetUserId, chatMessage });
-    setChatMessage("");
+  const sendChatMessage = () => {
+    if (chatMessage.trim()) {
+      const socket = createSocketConnection();
+
+      socket.emit("sendMessage", {
+        firstName: loggedInUser?.firstName,
+        lastName: loggedInUser?.lastName,
+        photo: loggedInUser?.photo,
+        _id,
+        targetUserId,
+        text: chatMessage,
+        createdAt: new Date().toISOString(),
+      });
+      setChatMessage("");
+    }
   };
+  const formatTime = (utcDate) => {
+    const date = new Date(utcDate);
+    return date.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      // weekday: "short",
+      day: "2-digit",
+      month: "short",
+      // year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="flex justify-center my-10">
