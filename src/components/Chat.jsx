@@ -121,7 +121,7 @@ const Chat = () => {
     }
   }, [messages]);
 
-  const sendChatMessage = () => {
+  const handleSendChatMessage = () => {
     if (chatMessage.trim()) {
       const socket = createSocketConnection();
 
@@ -156,37 +156,133 @@ const Chat = () => {
   }
 
   return (
-    <div className="flex justify-center my-10">
-      <div className="border-2 border-gray-300 w-[60vw] h-[30vw] rounded-lg">
-        <h1 className="text-center my-2 text-3xl font-semibold">Chat</h1>
-        <div className="h-[20vw] border-2 border-red-400 overflow-scroll p-5">
-          {messages.map((message, index) => {
-            return message?.firstName === loggedInUser?.firstName ? (
-              <div className="chat chat-end">
-                <div className="chat-bubble chat-bubble-info">
-                  {message?.firstName + " - " + message?.chatMessage}
-                </div>
+    <div className="bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100 py-8">
+      {messages ? (
+        <div className="h-[80vh] bg-cyan-50 flex flex-col my-8 mx-auto  border-2 overflow-hidden rounded-lg w-11/12 md:w-1/2">
+          {/* Chat Header */}
+          <div className="bg-blue-600 text-white px-6 py-4 flex items-center shadow-md ">
+            <div className="chat-image avatar">
+              <div className="w-10 rounded-full mr-4 border-2 border-cyan-400">
+                <img src={chatPerson?.photo} alt="Profile-photo" />
               </div>
-            ) : (
-              <div className="chat chat-start" key={index}>
-                <div className="chat-bubble chat-bubble-primary">
-                  {message?.firstName + " - " + message?.chatMessage}
+            </div>
+
+            <h1 className="text-lg font-semibold">
+              {chatPerson?.firstName + " " + chatPerson?.lastName}
+            </h1>
+          </div>
+
+          {/* Chat Messages */}
+          <div
+            className="flex-grow overflow-y-auto px-4 py-6 bg-cyan-50"
+            ref={containerRef}
+          >
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`chat  ${
+                  message.senderId === _id ? "chat-end " : " chat-start"
+                } my-4`}
+              >
+                {/* Avatar */}
+                <div className="chat-image avatar">
+                  <div className="w-8 rounded-full border-2 border-emerald-500">
+                    <img
+                      alt="Chat avatar"
+                      src={
+                        message.senderId === _id
+                          ? loggedInUser.photo
+                          : chatPerson?.photo
+                      }
+                    />
+                  </div>
                 </div>
+
+                {message.senderId !== _id ? (
+                  <div className="chat-header">
+                    {`${message.firstName} ${message.lastName}`}
+                    <time className="text-xs opacity-50">
+                      {" "}
+                      {formatTime(message.createdAt)}{" "}
+                    </time>
+                  </div>
+                ) : (
+                  <div className="chat-header">
+                    <time className="text-xs opacity-50">
+                      {" "}
+                      {formatTime(message.createdAt)}{" "}
+                    </time>
+                  </div>
+                )}
+
+                {/* Chat Bubble */}
+                <div
+                  className={`chat-bubble px-4 py-2 rounded-lg shadow-md ${
+                    message.senderId === _id
+                      ? "bg-emerald-500 text-white"
+                      : "bg-blue-100 text-blue-900"
+                  }`}
+                >
+                  {message.text}
+                </div>
+
+                {/* <div className="chat-footer opacity-50">Delivered</div> */}
               </div>
-            );
-          })}
+            ))}
+          </div>
+
+          {/* Message Input */}
+          <div className="bg-blue-600 px-4 py-4 flex items-center">
+            <input
+              type="text"
+              value={chatMessage}
+              onChange={(e) => setChatMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && chatMessage.trim()) {
+                  handleSendChatMessage();
+                }
+              }}
+              placeholder="Type a message..."
+              className="w-full px-4 py-3 rounded-md bg-cyan-50 text-blue-900 placeholder-blue-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 mr-4"
+            />
+            <button
+              onClick={handleSendChatMessage}
+              className="btn btn-success text-white px-6 py-3 rounded-lg bg-emerald-500 hover:bg-cyan-400 transition-all"
+            >
+              Send
+            </button>
+          </div>
         </div>
-        <input
-          className="py-3 w-4/5 mx-6 px-4 my-6"
-          type="text"
-          placeholder="Type message..."
-          value={chatMessage}
-          onChange={(e) => setChatMessage(e.target.value)}
-        ></input>
-        <button className="btn btn-secondary" onClick={sendChatMessage}>
-          Send
-        </button>
-      </div>
+      ) : (
+        <div className="h-[80vh] bg-cyan-50 flex flex-col my-8 mx-auto border-2 overflow-hidden rounded-lg w-11/12 md:w-1/2">
+          {/* Chat Header Shimmer */}
+          <div className="bg-blue-600 text-white px-6 py-4 flex items-center shadow-md animate-pulse">
+            <div className="chat-image avatar">
+              <div className="w-10 h-10 rounded-full mr-4 bg-gray-300"></div>
+            </div>
+            <div className="w-32 h-4 bg-gray-300 rounded-md"></div>
+          </div>
+
+          {/* Chat Messages Shimmer */}
+          <div className="flex-grow overflow-y-auto px-4 py-6 bg-cyan-50">
+            {[...Array(5)].map((_, index) => (
+              <div
+                key={index}
+                className={`chat my-4 ${
+                  index % 2 === 0 ? "chat-start" : "chat-end"
+                } animate-pulse`}
+              ></div>
+            ))}
+          </div>
+
+          {/* Message Input Shimmer */}
+          <div className="bg-blue-600 px-4 py-4 flex items-center animate-pulse">
+            <div className="w-full h-10 bg-gray-300 rounded-md mr-4"></div>
+            <div className="w-20 h-10 bg-gray-400 rounded-lg"></div>
+          </div>
+        </div>
+      )}
+      ;
     </div>
   );
 };
