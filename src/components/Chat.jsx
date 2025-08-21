@@ -100,7 +100,6 @@ const Chat = () => {
     socket.on(
       "messageReceived",
       ({ senderId, firstName, lastName, text, createdAt }) => {
-        createdAt = formatTime(createdAt);
         setMessages((messages) => [
           ...messages,
           { senderId, firstName, lastName, text, createdAt },
