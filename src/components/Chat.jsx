@@ -157,11 +157,11 @@ const Chat = () => {
   return (
     <div className="bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100 py-8">
       {messages ? (
-        <div className="h-[80vh] bg-cyan-50 flex flex-col my-8 mx-auto  border-2 overflow-hidden rounded-lg w-11/12 md:w-1/2">
+        <div className="h-[80vh] bg-base-300 flex flex-col my-8 mx-auto  border-2 overflow-hidden rounded-lg w-11/12 md:w-1/2 border-none">
           {/* Chat Header */}
-          <div className="bg-blue-600 text-white px-6 py-4 flex items-center shadow-md ">
+          <div className="bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 text-white px-6 py-4 flex items-center shadow-md ">
             <div className="chat-image avatar">
-              <div className="w-10 rounded-full mr-4 border-2 border-cyan-400">
+              <div className="w-10 rounded-full mr-4 border-2 border-rose-400">
                 <img src={chatPerson?.photo} alt="Profile-photo" />
               </div>
             </div>
@@ -173,7 +173,7 @@ const Chat = () => {
 
           {/* Chat Messages */}
           <div
-            className="flex-grow overflow-y-auto px-4 py-6 bg-cyan-50"
+            className="flex-grow overflow-y-auto px-4 py-6 bg-base-300"
             ref={containerRef}
           >
             {messages.map((message, index) => (
@@ -185,7 +185,7 @@ const Chat = () => {
               >
                 {/* Avatar */}
                 <div className="chat-image avatar">
-                  <div className="w-8 rounded-full border-2 border-emerald-500">
+                  <div className="w-8 rounded-full border-2 border-cyan-50">
                     <img
                       alt="Chat avatar"
                       src={
@@ -218,7 +218,7 @@ const Chat = () => {
                 <div
                   className={`chat-bubble px-4 py-2 rounded-lg shadow-md ${
                     message.senderId === _id
-                      ? "bg-emerald-500 text-white"
+                      ? "bg-yellow-500 text-black"
                       : "bg-blue-100 text-blue-900"
                   }`}
                 >
@@ -231,7 +231,7 @@ const Chat = () => {
           </div>
 
           {/* Message Input */}
-          <div className="bg-blue-600 px-4 py-4 flex items-center">
+          <div className="bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 px-4 py-4 flex items-center">
             <input
               type="text"
               value={chatMessage}
@@ -242,11 +242,11 @@ const Chat = () => {
                 }
               }}
               placeholder="Type a message..."
-              className="w-full px-4 py-3 rounded-md bg-cyan-50 text-blue-900 placeholder-blue-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 mr-4"
+              className="w-full px-4 py-3 rounded-md bg-cyan-50 text-blue-900 placeholder-blue-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 mr-4"
             />
             <button
               onClick={handleSendChatMessage}
-              className="btn btn-success text-white px-6 py-3 rounded-lg bg-emerald-500 hover:bg-cyan-400 transition-all"
+              className="btn btn-success text-yellow-500 px-6 py-3 rounded-lg bg-base-300 hover:bg-yellow-500 hover:text-black hover:border-black hover:cursor-pointer transition-all"
             >
               Send
             </button>
