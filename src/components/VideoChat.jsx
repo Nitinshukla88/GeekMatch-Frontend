@@ -108,7 +108,7 @@ const VideoChat = () => {
   }, [getUserMedia]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen items-center justify-center bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100">
       <div className="flex">
         <div>
           {show?.firstScreen && <ReactPlayer url={myStream} playing muted />}
@@ -119,7 +119,7 @@ const VideoChat = () => {
           )}
         </div>
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-3">
         <button
           className="btn btn-primary"
           onClick={(e) => {
