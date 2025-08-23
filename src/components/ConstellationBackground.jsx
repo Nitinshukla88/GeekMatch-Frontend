@@ -53,7 +53,7 @@ const ConstellationBackground = () => {
         // Draw particle
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#000000'; // Black color
+        ctx.fillStyle = '#FFFFFF'; // ✅ Changed from black to white
         ctx.fill();
         
         // Connect particles
@@ -66,7 +66,7 @@ const ConstellationBackground = () => {
           if (distance < connectionDistance) {
             const opacity = 1 - distance / connectionDistance;
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(0, 0, 0, ${opacity * 0.3})`;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.3})`; 
             ctx.lineWidth = 0.5;
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(other.x, other.y);
@@ -87,7 +87,7 @@ const ConstellationBackground = () => {
     <canvas 
       ref={canvasRef} 
       className="fixed inset-0 w-full h-full z-0"
-      style={{ background: '#FFFFFF' }}
+      style={{ background: '#000000' }} 
     />
   );
 };

@@ -13,19 +13,19 @@ const Hero = () => {
       <div className="animate-fade-in max-w-4xl mx-auto">
         {/* Main heading */}
         <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 sm:mb-8">
-          <span className="text-purple-gradient">
+          <span className="text-yellow-gradient"> {/* Changed from purple gradient to yellow */}
             Introducing GeekMatch
           </span>
         </h1>
         
         {/* Tagline */}
-        <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-10 sm:mb-12 text-gray-80 font-medium">
+        <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-10 sm:mb-12 text-white font-medium"> {/* Changed from text-gray-80 to white */}
           For developers From developers
         </p>
         
         {/* Static Get Started Button */}
         <Button 
-          className="border-2 border-purple text-purple hover:bg-purple hover:text-white bg-transparent text-xl sm:text-2xl py-4 px-10 sm:px-12 rounded-lg transition-all duration-200"
+          className="border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black bg-transparent text-xl sm:text-2xl py-4 px-10 sm:px-12 rounded-lg transition-all duration-200" 
           onClick={handleGetStarted}
         >
           Get Started
