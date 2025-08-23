@@ -9,7 +9,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import { IoPeopleOutline } from "react-icons/io5";
-import { removeUser } from "../utils/appStoreSlices/userSlice";
+import { addVideoChatUser, removeUser } from "../utils/appStoreSlices/userSlice";
 
 const Connections = () => {
   const [loading, setLoading] = useState(false);
@@ -131,7 +131,9 @@ const Connections = () => {
                 </button>
               </div>
               <Link to={membershipType === "gold" ? "/app/videoChat/" + _id : "/app/premium"}>
-                <button className="btn btn-sm btn-secondary text-white my-3">
+                <button className="btn btn-sm btn-secondary text-white my-3" onClick={() => dispatch(addVideoChatUser({
+                  VideoCalleeName : firstName,
+                }))}>
                     {membershipType === "gold" ? "Video Chat" : "Video Chat with Gold Premium"}
                   </button>
               </Link>

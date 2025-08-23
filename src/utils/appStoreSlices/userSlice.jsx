@@ -15,10 +15,13 @@ const userSlice = createSlice({
         },
         updateMembershipType : (state, action) => {
             return {...state, membershipType: action.payload};
+        }, 
+        addVideoChatUser : (state, action) => {
+            return {...state, videoChatUser: action.payload};
         }
     }
 })
 
-export const { addUser, removeUser, updateIsPremium, updateMembershipType } = userSlice.actions;
+export const { addUser, removeUser, updateIsPremium, updateMembershipType, addVideoChatUser } = userSlice.actions;
 
 export default userSlice.reducer;

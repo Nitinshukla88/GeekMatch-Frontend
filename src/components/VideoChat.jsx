@@ -14,6 +14,7 @@ import ReactPlayer from "react-player";
 const VideoChat = () => {
   const { targetUserId } = useParams();
   const loggedInUser = useSelector((store) => store?.user);
+  const { VideoCalleeName } = useSelector((store) => store?.user?.videoChatUser);
   const { _id, firstName } = loggedInUser || {};
   const [myStream, setMyStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
@@ -113,25 +114,32 @@ const VideoChat = () => {
       <div className="flex gap-16">
         <div className="w-[400px] h-[300px] rounded-lg overflow-hidden">
           {show?.firstScreen && (
-            <ReactPlayer
-              url={myStream}
-              playing
-              muted
-              width="100%"
-              height="100%"
-            />
+            <>
+              <p className="mx-2 text-2xl">{firstName} :</p>
+              <ReactPlayer
+                url={myStream}
+                playing
+                muted
+                width="100%"
+                height="100%"
+              />
+            </>
           )}
+          
         </div>
 
         <div className="w-[400px] h-[300px] rounded-lg overflow-hidden">
           {show?.SecondScreen && (
-            <ReactPlayer
-              url={remoteStream}
-              playing
-              muted
-              width="100%"
-              height="100%"
-            />
+            <>
+              <p className="mx-2 text-2xl">{VideoCalleeName}:</p>
+              <ReactPlayer
+                url={remoteStream}
+                playing
+                muted
+                width="100%"
+                height="100%"
+              />
+            </>
           )}
         </div>
       </div>
