@@ -19,6 +19,7 @@ const VideoChat = () => {
   const [remoteStream, setRemoteStream] = useState(null);
   const [show, setShow] = useState({ firstScreen: false, SecondScreen: false });
   const navigate = useNavigate();
+  const [isConnectCallClicked, setIsConnectCallClicked] = useState(true);
 
   const getUserMedia = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -109,28 +110,47 @@ const VideoChat = () => {
 
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100">
-      <div className="flex">
-        <div>
-          {show?.firstScreen && <ReactPlayer url={myStream} playing muted />}
+      <div className="flex gap-16">
+        <div className="w-[400px] h-[300px] rounded-lg overflow-hidden">
+          {show?.firstScreen && (
+            <ReactPlayer
+              url={myStream}
+              playing
+              muted
+              width="100%"
+              height="100%"
+            />
+          )}
         </div>
-        <div>
+
+        <div className="w-[400px] h-[300px] rounded-lg overflow-hidden">
           {show?.SecondScreen && (
-            <ReactPlayer url={remoteStream} playing muted />
+            <ReactPlayer
+              url={remoteStream}
+              playing
+              muted
+              width="100%"
+              height="100%"
+            />
           )}
         </div>
       </div>
-      <div className="flex justify-center gap-3">
+
+      <div className="flex justify-center gap-3 mt-9">
+        {isConnectCallClicked && (
+          <button
+            className="btn btn-primary bg-green-500 text-white"
+            onClick={(e) => {
+              setShow({ firstScreen: true, SecondScreen: true });
+              sendStream(myStream);
+              setIsConnectCallClicked(false);
+            }}
+          >
+            Connect call
+          </button>
+        )}
         <button
-          className="btn btn-primary"
-          onClick={(e) => {
-            setShow({ firstScreen: true, SecondScreen: true });
-            sendStream(myStream);
-          }}
-        >
-          Connect call
-        </button>
-        <button
-          className="btn btn-secondary"
+          className="btn btn-secondary bg-rose-500 text-white"
           onClick={(e) => navigate("/app/connections")}
         >
           Disconnect call
