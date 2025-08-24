@@ -78,7 +78,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (!connections) {
-      fetchChatMessages();
+      fetchConnections();
     } else {
       setChatPerson(
         connections.filter((connection) => connection?._id === targetUserId)[0]
@@ -198,16 +198,16 @@ const Chat = () => {
                 </div>
 
                 {message.senderId !== _id ? (
-                  <div className="chat-header">
+                  <div className="chat-header text-white">
                     {`${message.firstName} ${message.lastName}`}
-                    <time className="text-xs opacity-50">
+                    <time className="text-xs opacity-50 text-white">
                       {" "}
                       {formatTime(message.createdAt)}{" "}
                     </time>
                   </div>
                 ) : (
-                  <div className="chat-header">
-                    <time className="text-xs opacity-50">
+                  <div className="chat-header text-white">
+                    <time className="text-xs opacity-50 text-white">
                       {" "}
                       {formatTime(message.createdAt)}{" "}
                     </time>

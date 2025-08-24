@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
 import {
@@ -10,17 +10,51 @@ import {
   setRemoteAnswer,
 } from "../utils/videoChatUtils";
 import ReactPlayer from "react-player";
+import { addConnections } from "../utils/appStoreSlices/connectionSlice";
+import { removeUser } from "../utils/appStoreSlices/userSlice";
+import Loader from "./Loader";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
 
 const VideoChat = () => {
   const { targetUserId } = useParams();
   const loggedInUser = useSelector((store) => store?.user);
-  const { VideoCalleeName } = useSelector((store) => store?.user?.videoChatUser);
+  const [videoCalleeName, setVideoCalleeName] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { _id, firstName } = loggedInUser || {};
   const [myStream, setMyStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const [show, setShow] = useState({ firstScreen: false, SecondScreen: false });
   const navigate = useNavigate();
   const [isConnectCallClicked, setIsConnectCallClicked] = useState(true);
+  const connections = useSelector((store) => store?.connections);
+  const dispatch = useDispatch();
+
+  const fetchConnections = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(BASE_URL + "/user/connections", {
+        withCredentials: true,
+      });
+      dispatch(addConnections(res?.data?.data));
+    } catch (err) {
+      console.error(err);
+      if (err.status === 401) {
+        navigate("/app/login");
+        dispatch(removeUser());
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(()=> {
+    if(!connections) {
+      fetchConnections();
+    } else {
+      setVideoCalleeName(connections.filter((connection) => connection?._id === targetUserId)[0]);
+    }
+  }, [connections]);
 
   const getUserMedia = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -110,13 +144,17 @@ const VideoChat = () => {
     getUserMedia();
   }, [getUserMedia]);
 
+  if(loading) {
+    return <Loader/>
+  }
+
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100">
       <div className="flex gap-16">
         <div className="w-[400px] h-[300px] rounded-lg overflow-hidden">
           {show?.firstScreen ? (
             <>
-              <p className="mx-2 text-2xl">{firstName}</p>
+              <p className="mx-2 text-lg font-semibold">{firstName}</p>
               <ReactPlayer
                 url={myStream}
                 playing
@@ -127,7 +165,7 @@ const VideoChat = () => {
             </>
           ) : (
             <>
-              <p className="mx-2 text-2xl">{firstName}</p>
+              <p className="mx-2 text-lg font-semibold">{firstName}</p>
               <div
                 className="w-full h-full bg-slate-600 flex items-center justify-center text-white"
               >
@@ -141,7 +179,7 @@ const VideoChat = () => {
         <div className="w-[400px] h-[300px] rounded-lg overflow-hidden">
           {show?.SecondScreen ? (
             <>
-              <p className="mx-2 text-2xl">{VideoCalleeName}</p>
+              <p className="mx-2 text-lg font-semibold">{videoCalleeName?.firstName}</p>
               <ReactPlayer
                 url={remoteStream}
                 playing
@@ -152,7 +190,7 @@ const VideoChat = () => {
             </>
           ) : (
             <>
-              <p className="mx-2 text-2xl">{VideoCalleeName}</p>
+              <p className="mx-2 text-lg font-semibold">{videoCalleeName?.firstName}</p>
               <div
                 className="w-full h-full bg-slate-600 flex items-center justify-center text-white"
               >
