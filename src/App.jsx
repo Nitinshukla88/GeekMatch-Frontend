@@ -11,6 +11,7 @@ import Premium from "./components/Premium";
 import Chat from "./components/Chat";
 import VideoChat from "./components/VideoChat";
 import LandingPage from "./components/LandingPage";
+import ErrorPage from "./components/ErrorPage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/app/feed" element={<Feed />} />
               <Route path="/app/connections" element={<Connections />} />
               <Route path="/app/requests" element={<Requests />} />
+              <Route path="/app/error" element={<ErrorPage />} />
               <Route path="/app/premium" element={<Premium />} />
               <Route path="/app/chat/:targetUserId" element={<Chat />} />
               <Route

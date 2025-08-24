@@ -1,5 +1,4 @@
 import axios from "axios";
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
@@ -21,17 +20,23 @@ const Navbar = () => {
       navigate("/app/login");
     } catch (err) {
       console.error(err);
+      navigate("/app/error", {
+        state : {
+          message : err?.message || "Something went wrong",
+          note : "Error Logging Out",
+        }
+      })
     }
   };
 
   return (
     <>
-      <div className="navbar bg-base-300 sticky top-0 z-50">
+      <div className="navbar bg-base-300 sticky top-0 z-50 shadow-lg">
         <div className="flex-1">
-          <span className="text-4xl mx-1">💖</span>
+          <span className="text-3xl mx-1">💖</span>
           <Link
             to="/app/feed"
-            className="btn btn-ghost text-4xl bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent my-2 px-0 font-semibold"
+            className="btn btn-ghost text-3xl bg-gradient-to-r from-rose-700 via-rose-500 to-rose-300 bg-clip-text text-transparent my-1 px-0 font-semibold"
           >
             GeekMatch
           </Link>

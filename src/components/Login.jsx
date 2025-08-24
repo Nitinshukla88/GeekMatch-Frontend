@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/appStoreSlices/userSlice";
 import { BASE_URL } from "../utils/constants";
@@ -17,9 +17,9 @@ const Login = () => {
   const navigate = useNavigate();
   const user = useSelector((store) => store?.user);
 
-  useEffect(()=> {
+  useEffect(() => {
     window.scrollTo(0, 0);
-    if(user != null) {
+    if (user != null) {
       navigate("/app/feed");
     }
   }, [user]);
@@ -32,7 +32,7 @@ const Login = () => {
         "Invalid password: Must contain 8+ characters with at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character."
       );
     }
-  }
+  };
 
   const handleLogin = async () => {
     try {
@@ -43,10 +43,10 @@ const Login = () => {
         { emailId, password },
         { withCredentials: true }
       );
-      dispatch(addUser(res.data));
+      dispatch(addUser(res?.data));
       navigate("/app/feed");
-    } catch (err) {
-      setError(err?.response?.data || "Login Failed");
+    } catch (error) {
+      setError(error?.response?.data || "Login Failed");
       if (error.response) {
       } else if (error.request) {
         //axios error with no response (network issue)
@@ -62,7 +62,6 @@ const Login = () => {
   };
 
   const validateSignUpData = () => {
-  
     if (!firstName && !lastName && !emailId && !password) {
       throw new Error("Please enter details to proceed!");
     } else if (
@@ -85,29 +84,32 @@ const Login = () => {
     }
   };
 
-  const handleSignUp = async() => {
-        try{
-            setError("");
-            validateSignUpData();
-            const res = await axios.post(BASE_URL + "/signup", { firstName, lastName, emailId, password }, {withCredentials : true});
-            dispatch(addUser(res?.data?.data));
-            navigate("/app/profile");
-        }catch(error){
-            if (error.response) {
-                setError(error.response?.data || "Server error occurred");
-            } else if (error.request) {
-                setError("Network error. Please check your connection.");
-            } else if (error.message) {
-                setError(error.message);
-            } else {
-                setError("Signup failed. Please try again.");
-            }
-        }
+  const handleSignUp = async () => {
+    try {
+      setError("");
+      validateSignUpData();
+      const res = await axios.post(
+        BASE_URL + "/signup",
+        { firstName, lastName, emailId, password },
+        { withCredentials: true }
+      );
+      dispatch(addUser(res?.data?.data));
+      navigate("/app/profile");
+    } catch (error) {
+      if (error.response) {
+        setError(error.response?.data || "Server error occurred");
+      } else if (error.request) {
+        setError("Network error. Please check your connection.");
+      } else if (error.message) {
+        setError(error.message);
+      } else {
+        setError("Signup failed. Please try again.");
+      }
     }
+  };
 
   return (
     <div className="items-center justify-evenly min-h-screen text-gray-700 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100 flex flex-wrap ">
-      
       <div className="intro-container m-6 py-8 md:w-[500px]">
         <div className="flex-1 pb-2 text-center md:text-left">
           <Link
@@ -118,7 +120,8 @@ const Login = () => {
           </Link>
         </div>
         <h2 className="tag-line text-2xl font-medium text-gray-800 text-center md:text-left">
-          Where code 👨🏼‍💻 meets chemistry 💞— connect with developers who speak your language.
+          Where code 👨🏼‍💻 meets chemistry 💞— connect with developers who speak
+          your language.
         </h2>
       </div>
 
@@ -126,7 +129,7 @@ const Login = () => {
         <h1 className="text-3xl font-bold text-center mb-4 text-rose-600">
           {isLoginForm ? "Login to Your Account" : "Create an Account"}
         </h1>
-        
+
         <form
           className="space-y-4 "
           onSubmit={(e) => {
@@ -209,12 +212,12 @@ const Login = () => {
           <button
             className="text-rose-600 hover:underline"
             onClick={() => {
-              setError("")
-              setEmailId("")
-              setFirstName("")
-              setLastName("")
-              setPassword("")
-              setIsLoginForm(!isLoginForm)
+              setError("");
+              setEmailId("");
+              setFirstName("");
+              setLastName("");
+              setPassword("");
+              setIsLoginForm(!isLoginForm);
             }}
           >
             {isLoginForm ? "Sign Up" : "Login"}
