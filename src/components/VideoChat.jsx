@@ -91,12 +91,13 @@ const VideoChat = () => {
       "call-accepted",
       async ({ firstName, _id, targetUserId, answer }) => {
         console.log(`call got accepted`, answer);
+        setShow((state) => ({ ...state, SecondScreen: true }));
         await setRemoteAnswer(answer);
       }
     );
 
     socket.on("partner-disconnected", async ({ message, roomId }) => {
-      setShow({ firstScreen: true, SecondScreen: false });
+      setShow((state) => ({ ...state, SecondScreen: false }));
     });
 
     return () => {
@@ -113,9 +114,9 @@ const VideoChat = () => {
     <div className="flex flex-col min-h-screen items-center justify-center bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-100">
       <div className="flex gap-16">
         <div className="w-[400px] h-[300px] rounded-lg overflow-hidden">
-          {show?.firstScreen && (
+          {show?.firstScreen ? (
             <>
-              <p className="mx-2 text-2xl">{firstName} :</p>
+              <p className="mx-2 text-2xl">{firstName}</p>
               <ReactPlayer
                 url={myStream}
                 playing
@@ -124,14 +125,23 @@ const VideoChat = () => {
                 height="100%"
               />
             </>
+          ) : (
+            <>
+              <p className="mx-2 text-2xl">{firstName}</p>
+              <div
+                className="w-full h-full bg-slate-600 flex items-center justify-center text-white"
+              >
+                <span>Loading...</span>
+              </div>
+            </>
           )}
           
         </div>
 
         <div className="w-[400px] h-[300px] rounded-lg overflow-hidden">
-          {show?.SecondScreen && (
+          {show?.SecondScreen ? (
             <>
-              <p className="mx-2 text-2xl">{VideoCalleeName}:</p>
+              <p className="mx-2 text-2xl">{VideoCalleeName}</p>
               <ReactPlayer
                 url={remoteStream}
                 playing
@@ -139,6 +149,15 @@ const VideoChat = () => {
                 width="100%"
                 height="100%"
               />
+            </>
+          ) : (
+            <>
+              <p className="mx-2 text-2xl">{VideoCalleeName}</p>
+              <div
+                className="w-full h-full bg-slate-600 flex items-center justify-center text-white"
+              >
+                <span>Loading...</span>
+              </div>
             </>
           )}
         </div>
@@ -149,7 +168,7 @@ const VideoChat = () => {
           <button
             className="btn btn-primary bg-green-500 text-white"
             onClick={(e) => {
-              setShow({ firstScreen: true, SecondScreen: true });
+              setShow((state) => ({ ...state, firstScreen: true }));
               sendStream(myStream);
               setIsConnectCallClicked(false);
             }}
