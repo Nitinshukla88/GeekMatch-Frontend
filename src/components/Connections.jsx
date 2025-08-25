@@ -10,9 +10,12 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import { IoPeopleOutline } from "react-icons/io5";
-import { addVideoChatUser, removeUser } from "../utils/appStoreSlices/userSlice";
+import {
+  addVideoChatUser,
+  removeUser,
+} from "../utils/appStoreSlices/userSlice";
 import { removeFeed } from "../utils/appStoreSlices/feedSlice";
-import {removeAllRequests} from "../utils/appStoreSlices/requestsSlice"
+import { removeAllRequests } from "../utils/appStoreSlices/requestsSlice";
 
 const Connections = () => {
   const [loading, setLoading] = useState(false);
@@ -141,9 +144,17 @@ const Connections = () => {
                 <p className="text-sm text-yellow-500 mt-2">{about}</p>
               </div>
               <div className="flex gap-2 mt-4 ">
-                <Link to={membershipType === "silver" || membershipType === "gold" ? `/app/chat/` + _id : `/app/premium`}>
+                <Link
+                  to={
+                    membershipType === "silver" || membershipType === "gold"
+                      ? `/app/chat/` + _id
+                      : `/app/premium`
+                  }
+                >
                   <button className="btn btn-sm btn-success text-white">
-                    {membershipType === "silver" || membershipType === "gold" ? "Message" : "Chat with Silver Premium"}
+                    {membershipType === "silver" || membershipType === "gold"
+                      ? "Message"
+                      : "Chat with Silver Premium"}
                   </button>
                 </Link>
 
@@ -154,12 +165,27 @@ const Connections = () => {
                   Remove
                 </button>
               </div>
-              <Link to={membershipType === "gold" ? "/app/videoChat/" + _id : "/app/premium"}>
-                <button className="btn btn-sm btn-secondary text-white my-3" onClick={() => dispatch(addVideoChatUser({
-                  VideoCalleeName : firstName,
-                }))}>
-                    {membershipType === "gold" ? "Video Chat" : "Video Chat with Gold Premium"}
-                  </button>
+              <Link
+                to={
+                  membershipType === "gold"
+                    ? "/app/videoChat/" + _id
+                    : "/app/premium"
+                }
+              >
+                <button
+                  className="btn btn-sm btn-secondary text-white my-3"
+                  onClick={() =>
+                    dispatch(
+                      addVideoChatUser({
+                        VideoCalleeName: firstName,
+                      })
+                    )
+                  }
+                >
+                  {membershipType === "gold"
+                    ? "Video Chat"
+                    : "Video Chat with Gold Premium"}
+                </button>
               </Link>
             </div>
           );

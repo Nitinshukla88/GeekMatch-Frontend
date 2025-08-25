@@ -70,7 +70,9 @@ const Requests = () => {
         navigate("/app/error", {
           state: {
             message: err.message || "Something went wrong",
-            note: `Error ${status === "accepted" ? "accepting" : "rejecting"} the request`,
+            note: `Error ${
+              status === "accepted" ? "accepting" : "rejecting"
+            } the request`,
           },
         });
       }
@@ -81,7 +83,7 @@ const Requests = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if(!friendRequests) getRequests();
+    if (!friendRequests) getRequests();
   }, []);
 
   if (loading) {
@@ -97,8 +99,8 @@ const Requests = () => {
             No Connection Requests
           </h1>
           <p className="text-yellow-500 mt-2">
-            You have no connection requests currently. Check back
-            later for new requests!
+            You have no connection requests currently. Check back later for new
+            requests!
           </p>
         </div>
       </div>

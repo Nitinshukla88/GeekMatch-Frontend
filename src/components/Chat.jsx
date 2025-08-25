@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/appStoreSlices/userSlice";
-import { addConnections } from "../utils/appStoreSlices/connectionSlice";
+import { addConnections, removeConnections } from "../utils/appStoreSlices/connectionSlice";
+import { removeFeed } from "../utils/appStoreSlices/feedSlice";
+import { removeAllRequests } from "../utils/appStoreSlices/requestsSlice";
 import Loader from "./Loader";
 
 const Chat = () => {
@@ -47,11 +49,21 @@ const Chat = () => {
       setMessages((messages) => [...messages, ...newMessages]);
     } catch (err) {
       console.log(err.message);
-      if (err.response?.status === 401) {
+      if (err.response && err.response?.status === 401) {
         dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeAllRequests());
+        dispatch(removeConnections());
         navigate("/app/login");
-      } else if (err.response?.status === 403) {
+      } else if (err.response && err.response?.status === 403) {
         navigate("/app/premium");
+      } else {
+        navigate("/app/error", {
+          state : {
+            message : err?.message || "Something went wrong",
+            note : "Error fetching chat messages",
+          }
+        })
       }
     } finally {
       setLoading(false);
@@ -70,6 +82,16 @@ const Chat = () => {
       if (err.status === 401) {
         navigate("/app/login");
         dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeAllRequests());
+        dispatch(removeConnections());
+      } else {
+        navigate("/app/error", {
+          state : {
+            messages : err?.message || "Something went wrong",
+            note : "Error getting connection details",
+          }
+        })
       }
     } finally {
       setLoading(false);

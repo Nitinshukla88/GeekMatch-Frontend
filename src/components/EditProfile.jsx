@@ -6,8 +6,8 @@ import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../utils/appStoreSlices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { removeFeed } from "../utils/appStoreSlices/feedSlice";
-import {removeConnections} from "../utils/appStoreSlices/connectionSlice"
-import {removeAllRequests} from "../utils/appStoreSlices/requestsSlice"
+import { removeConnections } from "../utils/appStoreSlices/connectionSlice";
+import { removeAllRequests } from "../utils/appStoreSlices/requestsSlice";
 
 const EditProfile = ({ userInfo }) => {
   const [firstName, setFirstName] = useState(userInfo?.firstName);
@@ -258,13 +258,13 @@ const EditProfile = ({ userInfo }) => {
           </div>
         </div>
       </div>
-        {isProfileChanged && (
-          <div className="toast toast-top toast-center z-50">
-            <div className="alert alert-success shadow-lg">
-              <span>Profile changed Successfully</span>
-            </div>
+      {isProfileChanged && (
+        <div className="toast toast-top toast-center z-50">
+          <div className="alert alert-success shadow-lg">
+            <span>Profile changed Successfully</span>
           </div>
-        )}
+        </div>
+      )}
     </>
   );
 };

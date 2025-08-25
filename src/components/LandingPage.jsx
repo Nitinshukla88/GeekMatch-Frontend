@@ -1,4 +1,3 @@
-import React from 'react'
 import ConstellationBackground from './ConstellationBackground';
 import Hero from './Hero';
 
