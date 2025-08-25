@@ -1,15 +1,18 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addConnections,
   removeConnection,
+  removeConnections,
 } from "../utils/appStoreSlices/connectionSlice";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import { IoPeopleOutline } from "react-icons/io5";
 import { addVideoChatUser, removeUser } from "../utils/appStoreSlices/userSlice";
+import { removeFeed } from "../utils/appStoreSlices/feedSlice";
+import {removeAllRequests} from "../utils/appStoreSlices/requestsSlice"
 
 const Connections = () => {
   const [loading, setLoading] = useState(false);
@@ -30,6 +33,16 @@ const Connections = () => {
       if (err.status === 401) {
         navigate("/app/login");
         dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeConnections());
+        dispatch(removeAllRequests());
+      } else {
+        navigate("/app/error", {
+          state: {
+            message: err.message || "Something went wrong",
+            note: "Error fetching user connections",
+          },
+        });
       }
     } finally {
       setLoading(false);
@@ -51,6 +64,17 @@ const Connections = () => {
       console.error(error);
       if (error.status === 401) {
         navigate("/app/login");
+        dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeConnections());
+        dispatch(removeAllRequests());
+      } else {
+        navigate("/app/error", {
+          state: {
+            message: error.message || "Something went wrong",
+            note: "Error removing connection",
+          },
+        });
       }
     } finally {
       setLoading(false);
@@ -59,7 +83,7 @@ const Connections = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchConnections();
+    if (!connections) fetchConnections();
   }, []);
 
   if (loading) {

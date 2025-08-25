@@ -1,15 +1,18 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addRequests,
-  removeRequests,
+  removeAllRequests,
+  removeRequest,
 } from "../utils/appStoreSlices/requestsSlice";
 import { useNavigate } from "react-router-dom";
 import { removeUser } from "../utils/appStoreSlices/userSlice";
 import Loader from "./Loader";
 import { IoPersonRemoveOutline } from "react-icons/io5";
+import { removeFeed } from "../utils/appStoreSlices/feedSlice";
+import { removeConnections } from "../utils/appStoreSlices/connectionSlice";
 
 const Requests = () => {
   const dispatch = useDispatch();
@@ -29,6 +32,16 @@ const Requests = () => {
       if (err.status === 401) {
         navigate("/app/login");
         dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeAllRequests());
+        dispatch(removeConnections());
+      } else {
+        navigate("/app/error", {
+          state: {
+            message: err.message || "Something went wrong",
+            note: "Error fetching user received requests",
+          },
+        });
       }
     } finally {
       setLoading(false);
@@ -44,12 +57,22 @@ const Requests = () => {
         { withCredentials: true }
       );
       console.log(res);
-      dispatch(removeRequests(_id));
+      dispatch(removeRequest(_id));
     } catch (err) {
       console.error(err);
       if (err.status === 401) {
         navigate("/app/login");
         dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeConnections());
+        dispatch(removeAllRequests());
+      } else {
+        navigate("/app/error", {
+          state: {
+            message: err.message || "Something went wrong",
+            note: `Error ${status === "accepted" ? "accepting" : "rejecting"} the request`,
+          },
+        });
       }
     } finally {
       setLoading(false);
@@ -57,7 +80,8 @@ const Requests = () => {
   };
 
   useEffect(() => {
-    getRequests();
+    window.scrollTo(0, 0);
+    if(!friendRequests) getRequests();
   }, []);
 
   if (loading) {

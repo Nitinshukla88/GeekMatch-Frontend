@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import UserCard from "./UserCard";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
-import { addUser } from "../utils/appStoreSlices/userSlice";
+import { addUser, removeUser } from "../utils/appStoreSlices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { removeFeed } from "../utils/appStoreSlices/feedSlice";
+import {removeConnections} from "../utils/appStoreSlices/connectionSlice"
+import {removeAllRequests} from "../utils/appStoreSlices/requestsSlice"
 
 const EditProfile = ({ userInfo }) => {
   const [firstName, setFirstName] = useState(userInfo?.firstName);
@@ -120,6 +123,10 @@ const EditProfile = ({ userInfo }) => {
       console.log(err);
       if (err.status == 401) {
         navigate("/app/login");
+        dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeConnections());
+        dispatch(removeAllRequests());
       } else {
         setError(err?.response?.data);
       }

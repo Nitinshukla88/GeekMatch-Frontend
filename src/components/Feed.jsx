@@ -2,11 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { addFeed } from "../utils/appStoreSlices/feedSlice";
+import { addFeed, removeFeed } from "../utils/appStoreSlices/feedSlice";
 import UserCard from "./UserCard";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
+import { removeUser } from "../utils/appStoreSlices/userSlice";
+import { removeConnections } from "../utils/appStoreSlices/connectionSlice";
+import { removeAllRequests } from "../utils/appStoreSlices/requestsSlice";
 
 const Feed = () => {
   const feed = useSelector((store) => store?.feed);
@@ -22,10 +25,21 @@ const Feed = () => {
       });
       dispatch(addFeed(res?.data.data));
     } catch (err) {
-      if (err.message === "Request failed with status code 401") {
+      if (err.response?.status === 401) {
         navigate("/app/login");
+        dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeConnections());
+        dispatch(removeAllRequests());
+        console.error(err.message);
+      } else {
+        navigate("/app/error", {
+          state: {
+            message: err.message || "Something went wrong",
+            note: "Error fetching feed",
+          },
+        });
       }
-      console.error(err.message);
     } finally {
       setIsLoading(false);
     }
