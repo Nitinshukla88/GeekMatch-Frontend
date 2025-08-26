@@ -5,6 +5,7 @@ import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/appStoreSlices/userSlice";
 import { removeFeed } from "../utils/appStoreSlices/feedSlice";
 import { removeConnections } from "../utils/appStoreSlices/connectionSlice";
+import {removeAllRequests} from "../utils/appStoreSlices/requestsSlice"
 
 const Navbar = () => {
   const user = useSelector((store) => store?.user);
@@ -17,7 +18,8 @@ const Navbar = () => {
       dispatch(removeUser());
       dispatch(removeFeed());
       dispatch(removeConnections());
-      navigate("/app/login");
+      dispatch(removeAllRequests());
+      return navigate("/app/login");
     } catch (err) {
       console.error(err);
       navigate("/app/error", {

@@ -24,7 +24,7 @@ const ErrorPage = () => {
             )}
           </div>
         )}
-        <div className="mt-6 flex space-x-4">
+        <div className="mt-6 flex space-x-4 justify-center">
           <button
             onClick={() => navigate(-1)}
             className="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700 transition"
