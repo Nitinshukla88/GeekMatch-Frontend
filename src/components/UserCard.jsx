@@ -1,15 +1,17 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "../utils/appStoreSlices/feedSlice";
 import Loader from "./Loader";
+import { useNavigate } from "react-router-dom";
 
 const UserCard = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const { _id, firstName, lastName, about, age, gender, photo } = user;
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSendRequest = async (status, userId) => {
     try {
@@ -23,20 +25,36 @@ const UserCard = ({ user }) => {
       dispatch(removeUserFromFeed(_id));
     } catch (err) {
       console.error(err);
+      if (err.status === 401) {
+        navigate("/app/login");
+      } else {
+        navigate("/app/error", {
+          state: {
+            message: err?.message || "Something went wrong!",
+            note: `Error ${
+              status === "interested" ? "sending request to" : "ignoring"
+            } the user`,
+          },
+        });
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  if(loading) {
-    return <Loader/>
+  if (loading) {
+    return <Loader />;
   }
 
   return (
     <div className="flex flex-col justify-center my-8 mx-8 max-[320px]:mx-4 w-96 max-[470px]:w-72 max-[320px]:w-full">
       <div className="card glass w-full bg-gradient-to-r from-rose-500 to-blue-400 text-white shadow-blue-900 shadow-2xl">
         <figure className="w-full h-96 flex items-center justify-center bg-gray-300 mx-auto">
-          <img src={photo || "https://geographyandyou.com/images/user-profile.png"} alt="photo"  className="w-full h-full object-cover"/>
+          <img
+            src={photo || "https://geographyandyou.com/images/user-profile.png"}
+            alt="photo"
+            className="w-full h-full object-cover"
+          />
         </figure>
         <div className="card-body">
           <h2 className="card-title">{firstName + " " + lastName}</h2>

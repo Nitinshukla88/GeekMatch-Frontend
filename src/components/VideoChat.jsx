@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
@@ -10,11 +10,16 @@ import {
   setRemoteAnswer,
 } from "../utils/videoChatUtils";
 import ReactPlayer from "react-player";
-import { addConnections } from "../utils/appStoreSlices/connectionSlice";
+import {
+  addConnections,
+  removeConnections,
+} from "../utils/appStoreSlices/connectionSlice";
 import { removeUser } from "../utils/appStoreSlices/userSlice";
 import Loader from "./Loader";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import { removeFeed } from "../utils/appStoreSlices/feedSlice";
+import { removeAllRequests } from "../utils/appStoreSlices/requestsSlice";
 
 const VideoChat = () => {
   const { targetUserId } = useParams();
@@ -42,17 +47,22 @@ const VideoChat = () => {
       if (err.status === 401) {
         navigate("/app/login");
         dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeConnections());
+        dispatch(removeAllRequests());
       }
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(()=> {
-    if(!connections) {
+  useEffect(() => {
+    if (!connections) {
       fetchConnections();
     } else {
-      setVideoCalleeName(connections.filter((connection) => connection?._id === targetUserId)[0]);
+      setVideoCalleeName(
+        connections.filter((connection) => connection?._id === targetUserId)[0]
+      );
     }
   }, [connections]);
 
@@ -144,8 +154,8 @@ const VideoChat = () => {
     getUserMedia();
   }, [getUserMedia]);
 
-  if(loading) {
-    return <Loader/>
+  if (loading) {
+    return <Loader />;
   }
 
   return (
@@ -154,7 +164,9 @@ const VideoChat = () => {
         <div className="w-[400px] h-[300px] rounded-lg overflow-hidden">
           {show?.firstScreen ? (
             <>
-              <p className="mx-2 text-lg font-semibold">{firstName}</p>
+              <p className="mx-2 text-lg text-gray-600 font-semibold">
+                {firstName}
+              </p>
               <ReactPlayer
                 url={myStream}
                 playing
@@ -165,21 +177,22 @@ const VideoChat = () => {
             </>
           ) : (
             <>
-              <p className="mx-2 text-lg font-semibold">{firstName}</p>
-              <div
-                className="w-full h-full bg-slate-600 flex items-center justify-center text-white"
-              >
+              <p className="mx-2 text-lg text-gray-600 font-semibold">
+                {firstName}
+              </p>
+              <div className="w-full h-full bg-slate-600 flex items-center justify-center text-white">
                 <span>Loading...</span>
               </div>
             </>
           )}
-          
         </div>
 
         <div className="w-[400px] h-[300px] rounded-lg overflow-hidden">
           {show?.SecondScreen ? (
             <>
-              <p className="mx-2 text-lg font-semibold">{videoCalleeName?.firstName}</p>
+              <p className="mx-2 text-lg text-gray-600 font-semibold">
+                {videoCalleeName?.firstName}
+              </p>
               <ReactPlayer
                 url={remoteStream}
                 playing
@@ -190,10 +203,10 @@ const VideoChat = () => {
             </>
           ) : (
             <>
-              <p className="mx-2 text-lg font-semibold">{videoCalleeName?.firstName}</p>
-              <div
-                className="w-full h-full bg-slate-600 flex items-center justify-center text-white"
-              >
+              <p className="mx-2 text-lg text-gray-600 font-semibold">
+                {videoCalleeName?.firstName}
+              </p>
+              <div className="w-full h-full bg-slate-600 flex items-center justify-center text-white">
                 <span>Loading...</span>
               </div>
             </>
