@@ -13,6 +13,7 @@ const Login = () => {
   const [lastName, setLastName] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((store) => store?.user);
@@ -37,6 +38,7 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       setError("");
+      setLoading(true);
       validateLoginData();
       const res = await axios.post(
         BASE_URL + "/login",
@@ -58,6 +60,8 @@ const Login = () => {
         //fallback for any other error
         setError("Login failed. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,6 +91,7 @@ const Login = () => {
   const handleSignUp = async () => {
     try {
       setError("");
+      setLoading(true);
       validateSignUpData();
       const res = await axios.post(
         BASE_URL + "/signup",
@@ -105,6 +110,8 @@ const Login = () => {
       } else {
         setError("Signup failed. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -203,8 +210,9 @@ const Login = () => {
           <button
             type="submit"
             className="btn btn-primary text-white bg-rose-700 border-none w-full mt-4"
+            disabled={loading}
           >
-            {isLoginForm ? "Login" : "Sign Up"}
+            {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : (isLoginForm ? "Login" : "Sign Up")}
           </button>
         </form>
         <p className="text-sm text-center mt-4">
